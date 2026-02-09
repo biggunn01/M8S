@@ -4165,6 +4165,116 @@
             }
         }
 
+        /* ==== */
+        /* MOBILE SETTINGS BUTTON FIX - ENSURE TOUCH WORKS */
+        /* ==== */
+
+        @media (max-width: 768px) {
+            /* Ensure settings icon is touchable and visible */
+            #mobileSettingsIcon {
+                position: fixed !important;
+                top: calc(env(safe-area-inset-top, 10px) + 15px) !important;
+                right: 15px !important;
+                background: rgba(0, 212, 255, 0.3) !important;
+                border: 2px solid #00d4ff !important;
+                color: #00d4ff !important;
+                padding: 10px !important;
+                border-radius: 50% !important;
+                cursor: pointer !important;
+                font-size: 20px !important;
+                z-index: 10001 !important;
+                transition: all 0.3s !important;
+                width: 45px !important;
+                height: 45px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                -webkit-tap-highlight-color: rgba(0, 212, 255, 0.3) !important;
+                touch-action: manipulation !important;
+            }
+
+            #mobileSettingsIcon:active {
+                background: rgba(0, 212, 255, 0.6) !important;
+                transform: scale(0.95) !important;
+            }
+
+            /* Ensure menu slides in properly */
+            #mobileSettingsMenu {
+                position: fixed !important;
+                top: 0 !important;
+                right: -300px !important;
+                width: 280px !important;
+                height: 100% !important;
+                background: rgba(26, 26, 46, 0.98) !important;
+                backdrop-filter: blur(10px) !important;
+                z-index: 10002 !important;
+                padding: calc(env(safe-area-inset-top, 10px) + 70px) 20px 20px 20px !important;
+                box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5) !important;
+                transition: right 0.3s ease !important;
+                border-left: 2px solid rgba(0, 212, 255, 0.3) !important;
+            }
+
+            #mobileSettingsMenu.show {
+                right: 0 !important;
+            }
+
+            /* Ensure menu items are touchable */
+            .settings-menu-item {
+                background: rgba(0, 212, 255, 0.1) !important;
+                border: 2px solid rgba(0, 212, 255, 0.3) !important;
+                color: #00d4ff !important;
+                padding: 15px !important;
+                margin-bottom: 12px !important;
+                border-radius: 8px !important;
+                cursor: pointer !important;
+                font-size: 14px !important;
+                font-weight: bold !important;
+                text-align: center !important;
+                transition: all 0.3s !important;
+                width: 100% !important;
+                -webkit-tap-highlight-color: rgba(0, 212, 255, 0.3) !important;
+                touch-action: manipulation !important;
+            }
+
+            .settings-menu-item:active {
+                background: rgba(0, 212, 255, 0.4) !important;
+                transform: scale(0.98) !important;
+            }
+
+            /* Ensure overlay works */
+            #mobileSettingsOverlay {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                background: rgba(0, 0, 0, 0.7) !important;
+                z-index: 10001 !important;
+                display: none !important;
+                -webkit-tap-highlight-color: transparent !important;
+            }
+
+            #mobileSettingsOverlay.show {
+                display: block !important;
+            }
+
+            /* Ensure close button works */
+            .settings-menu-close {
+                position: absolute !important;
+                top: calc(env(safe-area-inset-top, 10px) + 15px) !important;
+                right: 15px !important;
+                background: transparent !important;
+                border: none !important;
+                color: #00d4ff !important;
+                font-size: 30px !important;
+                cursor: pointer !important;
+                padding: 5px !important;
+                line-height: 1 !important;
+                -webkit-tap-highlight-color: rgba(0, 212, 255, 0.3) !important;
+                touch-action: manipulation !important;
+            }
+        }
+
 </style>
 </head>
 <body>
