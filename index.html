@@ -3711,11 +3711,309 @@
             }
         }
 
+        /* ==== */
+        /* MOBILE FIXES V3 - FINAL COMPREHENSIVE UPDATE */
+        /* ==== */
+
+        @media (max-width: 768px) {
+            /* Disable double-tap zoom */
+            * {
+                touch-action: manipulation;
+            }
+            
+            /* CRITICAL FIX #1: Fixed Header Bar with All Top Buttons */
+            body {
+                padding-top: calc(env(safe-area-inset-top, 10px) + 60px) !important;
+            }
+            
+            header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: rgba(26, 26, 46, 0.98);
+                backdrop-filter: blur(10px);
+                padding: calc(env(safe-area-inset-top, 10px) + 10px) 15px 10px 15px;
+                z-index: 10000;
+                margin-bottom: 0;
+                border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+                box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+            }
+            
+            header h1 {
+                font-size: 1.3em;
+                margin-bottom: 3px;
+            }
+            
+            header .subtitle {
+                font-size: 0.85em;
+                margin-bottom: 8px;
+            }
+            
+            /* Top buttons row in header */
+            #mobileTopButtons {
+                display: flex;
+                justify-content: center;
+                gap: 6px;
+                flex-wrap: wrap;
+                margin-top: 8px;
+            }
+            
+            #soundToggle, #statsToggle, #rollHistoryToggle, #testModeToggle {
+                position: static !important;
+                padding: 6px 12px !important;
+                font-size: 10px !important;
+                margin: 0 !important;
+                flex: 0 1 auto;
+            }
+
+            /* Hide standalone buttons on mobile - show only in header */
+            body > #soundToggle:not(#mobileTopButtons #soundToggle),
+            body > #statsToggle:not(#mobileTopButtons #statsToggle),
+            body > #rollHistoryToggle:not(#mobileTopButtons #rollHistoryToggle),
+            body > #testModeToggle:not(#mobileTopButtons #testModeToggle) {
+                display: none !important;
+            }
+            
+            /* CRITICAL FIX #2: Shortcuts Button - Bottom Right */
+            #keyboardHelpButton {
+                position: fixed !important;
+                bottom: calc(env(safe-area-inset-bottom, 20px) + 20px) !important;
+                right: 20px !important;
+                z-index: 9999 !important;
+                background: rgba(0, 212, 255, 0.9) !important;
+                backdrop-filter: blur(10px) !important;
+                box-shadow: 0 4px 15px rgba(0, 212, 255, 0.5) !important;
+                border: 2px solid #00d4ff !important;
+                padding: 10px 15px !important;
+                border-radius: 50px !important;
+                font-size: 11px !important;
+                font-weight: bold !important;
+            }
+            
+            /* CRITICAL FIX #3: Splash Screen - Proper Sizing & Top Padding */
+            .splash-screen {
+                padding-top: calc(env(safe-area-inset-top, 20px) + 20px);
+            }
+            
+            .splash-content {
+                padding: 20px 15px calc(env(safe-area-inset-bottom, 20px) + 20px) 15px;
+                max-height: 100vh;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .splash-title {
+                font-size: 2em !important;
+                margin-bottom: 25px !important;
+                margin-top: 10px !important;
+            }
+            
+            .splash-players {
+                flex-direction: column;
+                gap: 35px !important;
+                margin-bottom: 35px !important;
+            }
+            
+            .splash-nft-container {
+                width: 220px !important;
+                height: 220px !important;
+                margin-top: 15px;
+            }
+            
+            .splash-player-name {
+                font-size: 1.6em !important;
+            }
+            
+            .splash-player-id {
+                font-size: 1.1em !important;
+            }
+            
+            .splash-gang-name {
+                font-size: 1.1em !important;
+            }
+            
+            .splash-vs {
+                transform: rotate(90deg);
+                font-size: 2.5em !important;
+                margin: 15px 0 !important;
+            }
+            
+            .splash-match-info {
+                font-size: 1.1em !important;
+                margin-bottom: 25px !important;
+            }
+            
+            .splash-continue-btn {
+                padding: 15px 45px !important;
+                font-size: 1.3em !important;
+                margin-bottom: 10px;
+            }
+            
+            .splash-replay-btn {
+                padding: 15px 40px !important;
+                font-size: 1.2em !important;
+            }
+            
+            .splash-loser-x {
+                font-size: 12em !important;
+            }
+            
+            /* CRITICAL FIX #4: Replay Controls - Bottom Safe Area */
+            #replayControls {
+                bottom: calc(env(safe-area-inset-bottom, 20px) + 15px) !important;
+                min-width: 92% !important;
+                padding: 15px 18px !important;
+                gap: 12px !important;
+            }
+            
+            .replay-banner {
+                font-size: 1em !important;
+                padding: 7px 15px !important;
+            }
+            
+            .replay-info {
+                font-size: 0.95em !important;
+            }
+            
+            .replay-buttons {
+                flex-wrap: wrap;
+                gap: 10px !important;
+            }
+            
+            .replay-btn {
+                padding: 9px 15px !important;
+                font-size: 0.9em !important;
+            }
+            
+            .replay-slider-container {
+                width: 100%;
+                gap: 10px !important;
+            }
+            
+            .replay-position {
+                font-size: 1em !important;
+            }
+            
+            /* Notification positioning */
+            #boostNotificationContainer {
+                top: calc(env(safe-area-inset-top, 10px) + 140px) !important;
+                right: 10px;
+                max-width: 280px;
+            }
+            
+            .boost-notification-banner {
+                padding: 12px 15px !important;
+                font-size: 0.95em !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* Extra small phones */
+            header h1 {
+                font-size: 1.1em;
+            }
+            
+            header .subtitle {
+                font-size: 0.75em;
+            }
+            
+            #soundToggle, #statsToggle, #rollHistoryToggle, #testModeToggle {
+                padding: 5px 10px !important;
+                font-size: 9px !important;
+            }
+            
+            .splash-title {
+                font-size: 1.6em !important;
+            }
+            
+            .splash-nft-container {
+                width: 180px !important;
+                height: 180px !important;
+            }
+            
+            .splash-player-name {
+                font-size: 1.3em !important;
+            }
+            
+            .splash-player-id {
+                font-size: 0.95em !important;
+            }
+            
+            .splash-gang-name {
+                font-size: 0.95em !important;
+            }
+            
+            .splash-vs {
+                font-size: 2em !important;
+            }
+            
+            .splash-continue-btn {
+                padding: 12px 35px !important;
+                font-size: 1.1em !important;
+            }
+            
+            .splash-replay-btn {
+                padding: 12px 30px !important;
+                font-size: 1em !important;
+            }
+            
+            .splash-loser-x {
+                font-size: 10em !important;
+            }
+            
+            #replayControls {
+                min-width: 95% !important;
+                padding: 12px 15px !important;
+            }
+            
+            .replay-btn {
+                padding: 7px 12px !important;
+                font-size: 0.85em !important;
+            }
+            
+            #keyboardHelpButton {
+                padding: 8px 12px !important;
+                font-size: 10px !important;
+            }
+        }
+
+        /* Landscape orientation - better layout */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .splash-players {
+                flex-direction: row !important;
+                gap: 50px !important;
+            }
+            
+            .splash-vs {
+                transform: rotate(0deg) !important;
+                margin: 0 25px !important;
+            }
+            
+            .splash-nft-container {
+                width: 180px !important;
+                height: 180px !important;
+            }
+            
+            .splash-title {
+                font-size: 1.6em !important;
+                margin-bottom: 20px !important;
+            }
+        }
+
 </style>
 </head>
 <body>
     <!-- Sound Toggle Button -->
     <button id="soundToggle" onclick="toggleSound()">🔊 SOUND ON</button>
+
+    <!-- Mobile Top Buttons Container (only shows on mobile) -->
+    <div id="mobileTopButtons" style="display: none;">
+        <button id="soundToggle" onclick="toggleSound()">🔊 SOUND ON</button>
+        <button id="statsToggle" onclick="toggleStats()">📊 STATS (S)</button>
+        <button id="rollHistoryToggle" onclick="toggleRollHistory()">📜 ROLL HISTORY (H)</button>
+        <button id="testModeToggle" onclick="toggleTestMode()">🧪 TEST MODE (T)</button>
+    </div>
 
     <!-- Keyboard Shortcuts Help Overlay -->
     <div id="keyboardHelpOverlay">
