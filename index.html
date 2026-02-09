@@ -4002,7 +4002,7 @@
         }
 
         /* ==== */
-        /* MOBILE SETTINGS MENU - OPTION A */
+        /* MOBILE SETTINGS MENU - FIXED VERSION */
         /* ==== */
 
         @media (max-width: 768px) {
@@ -4022,7 +4022,7 @@
                 transition: all 0.3s;
                 width: 45px;
                 height: 45px;
-                display: flex;
+                display: flex !important;
                 align-items: center;
                 justify-content: center;
             }
@@ -4072,6 +4072,7 @@
                 font-weight: bold;
                 text-align: center;
                 transition: all 0.3s;
+                width: 100%;
             }
 
             .settings-menu-item:hover {
@@ -4114,66 +4115,9 @@
                 display: none !important;
             }
 
-            /* Shortcuts Button - Small Circle Bottom Right */
+            /* HIDE Shortcuts Button on Mobile - it's now in Settings menu */
             #keyboardHelpButton {
-                position: fixed !important;
-                bottom: calc(env(safe-area-inset-bottom, 20px) + 20px) !important;
-                right: 20px !important;
-                z-index: 9999 !important;
-                background: rgba(0, 212, 255, 0.9) !important;
-                backdrop-filter: blur(10px) !important;
-                box-shadow: 0 4px 15px rgba(0, 212, 255, 0.5) !important;
-                border: 2px solid #00d4ff !important;
-                padding: 0 !important;
-                border-radius: 50% !important;
-                font-size: 20px !important;
-                font-weight: bold !important;
-                width: 50px !important;
-                height: 50px !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-            }
-
-            #keyboardHelpButton::before {
-                content: "?" !important;
-            }
-
-            /* Enlarge Splash Screen Images */
-            .splash-nft-container {
-                width: 240px !important;
-                height: 240px !important;
-            }
-
-            .splash-title {
-                font-size: 2.2em !important;
-                margin-bottom: 30px !important;
-            }
-
-            .splash-player-name {
-                font-size: 1.7em !important;
-            }
-
-            .splash-player-id {
-                font-size: 1.2em !important;
-            }
-
-            .splash-gang-name {
-                font-size: 1.15em !important;
-            }
-
-            .splash-vs {
-                font-size: 2.8em !important;
-            }
-
-            /* Reduce Splash Screen Padding */
-            .splash-content {
-                padding: 15px 15px calc(env(safe-area-inset-bottom, 20px) + 15px) 15px;
-            }
-
-            .splash-players {
-                gap: 30px !important;
-                margin-bottom: 30px !important;
+                display: none !important;
             }
         }
 
@@ -9340,13 +9284,13 @@
             }
         }
         
-        // Mobile Settings Menu
-        if (window.innerWidth <= 768) {
-            const settingsIcon = document.getElementById('mobileSettingsIcon');
-            const settingsMenu = document.getElementById('mobileSettingsMenu');
-            const settingsOverlay = document.getElementById('mobileSettingsOverlay');
-            const settingsClose = document.querySelector('.settings-menu-close');
+        // Mobile Settings Menu - Always initialize
+        const settingsIcon = document.getElementById('mobileSettingsIcon');
+        const settingsMenu = document.getElementById('mobileSettingsMenu');
+        const settingsOverlay = document.getElementById('mobileSettingsOverlay');
+        const settingsClose = document.querySelector('.settings-menu-close');
 
+        if (settingsIcon && settingsMenu && settingsOverlay && settingsClose) {
             // Open menu
             settingsIcon.addEventListener('click', () => {
                 settingsMenu.classList.add('show');
@@ -9365,35 +9309,51 @@
             });
 
             // Menu item actions
-            document.getElementById('mobileSoundToggle').addEventListener('click', () => {
-                toggleSound();
-                settingsMenu.classList.remove('show');
-                settingsOverlay.classList.remove('show');
-            });
+            const mobileSoundToggle = document.getElementById('mobileSoundToggle');
+            const mobileStatsToggle = document.getElementById('mobileStatsToggle');
+            const mobileRollHistoryToggle = document.getElementById('mobileRollHistoryToggle');
+            const mobileTestModeToggle = document.getElementById('mobileTestModeToggle');
+            const mobileShortcutsToggle = document.getElementById('mobileShortcutsToggle');
 
-            document.getElementById('mobileStatsToggle').addEventListener('click', () => {
-                toggleStats();
-                settingsMenu.classList.remove('show');
-                settingsOverlay.classList.remove('show');
-            });
+            if (mobileSoundToggle) {
+                mobileSoundToggle.addEventListener('click', () => {
+                    toggleSound();
+                    settingsMenu.classList.remove('show');
+                    settingsOverlay.classList.remove('show');
+                });
+            }
 
-            document.getElementById('mobileRollHistoryToggle').addEventListener('click', () => {
-                toggleRollHistory();
-                settingsMenu.classList.remove('show');
-                settingsOverlay.classList.remove('show');
-            });
+            if (mobileStatsToggle) {
+                mobileStatsToggle.addEventListener('click', () => {
+                    toggleStats();
+                    settingsMenu.classList.remove('show');
+                    settingsOverlay.classList.remove('show');
+                });
+            }
 
-            document.getElementById('mobileTestModeToggle').addEventListener('click', () => {
-                toggleTestMode();
-                settingsMenu.classList.remove('show');
-                settingsOverlay.classList.remove('show');
-            });
+            if (mobileRollHistoryToggle) {
+                mobileRollHistoryToggle.addEventListener('click', () => {
+                    toggleRollHistory();
+                    settingsMenu.classList.remove('show');
+                    settingsOverlay.classList.remove('show');
+                });
+            }
 
-            document.getElementById('mobileShortcutsToggle').addEventListener('click', () => {
-                toggleKeyboardHelp();
-                settingsMenu.classList.remove('show');
-                settingsOverlay.classList.remove('show');
-            });
+            if (mobileTestModeToggle) {
+                mobileTestModeToggle.addEventListener('click', () => {
+                    toggleTestMode();
+                    settingsMenu.classList.remove('show');
+                    settingsOverlay.classList.remove('show');
+                });
+            }
+
+            if (mobileShortcutsToggle) {
+                mobileShortcutsToggle.addEventListener('click', () => {
+                    toggleKeyboardHelp();
+                    settingsMenu.classList.remove('show');
+                    settingsOverlay.classList.remove('show');
+                });
+            }
         }
 
     </script>
