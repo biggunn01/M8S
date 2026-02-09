@@ -4001,9 +4001,243 @@
             }
         }
 
+        /* ==== */
+        /* MOBILE SETTINGS MENU - OPTION A */
+        /* ==== */
+
+        @media (max-width: 768px) {
+            /* Settings Icon in Header */
+            #mobileSettingsIcon {
+                position: fixed;
+                top: calc(env(safe-area-inset-top, 10px) + 15px);
+                right: 15px;
+                background: rgba(0, 212, 255, 0.2);
+                border: 2px solid #00d4ff;
+                color: #00d4ff;
+                padding: 10px;
+                border-radius: 50%;
+                cursor: pointer;
+                font-size: 20px;
+                z-index: 10001;
+                transition: all 0.3s;
+                width: 45px;
+                height: 45px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            #mobileSettingsIcon:hover {
+                background: rgba(0, 212, 255, 0.4);
+                box-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
+            }
+
+            /* Slide-in Settings Menu */
+            #mobileSettingsMenu {
+                position: fixed;
+                top: 0;
+                right: -300px;
+                width: 280px;
+                height: 100%;
+                background: rgba(26, 26, 46, 0.98);
+                backdrop-filter: blur(10px);
+                z-index: 10002;
+                padding: calc(env(safe-area-inset-top, 10px) + 70px) 20px 20px 20px;
+                box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5);
+                transition: right 0.3s ease;
+                border-left: 2px solid rgba(0, 212, 255, 0.3);
+            }
+
+            #mobileSettingsMenu.show {
+                right: 0;
+            }
+
+            .settings-menu-title {
+                font-size: 1.5em;
+                color: #00d4ff;
+                margin-bottom: 20px;
+                text-align: center;
+                font-weight: bold;
+            }
+
+            .settings-menu-item {
+                background: rgba(0, 212, 255, 0.1);
+                border: 2px solid rgba(0, 212, 255, 0.3);
+                color: #00d4ff;
+                padding: 12px 15px;
+                margin-bottom: 12px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: bold;
+                text-align: center;
+                transition: all 0.3s;
+            }
+
+            .settings-menu-item:hover {
+                background: rgba(0, 212, 255, 0.3);
+                border-color: #00d4ff;
+                transform: translateX(-5px);
+            }
+
+            .settings-menu-close {
+                position: absolute;
+                top: calc(env(safe-area-inset-top, 10px) + 15px);
+                right: 15px;
+                background: transparent;
+                border: none;
+                color: #00d4ff;
+                font-size: 30px;
+                cursor: pointer;
+                padding: 5px;
+                line-height: 1;
+            }
+
+            /* Overlay when menu is open */
+            #mobileSettingsOverlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                z-index: 10001;
+                display: none;
+            }
+
+            #mobileSettingsOverlay.show {
+                display: block;
+            }
+
+            /* Hide original top buttons on mobile */
+            #soundToggle, #statsToggle, #rollHistoryToggle, #testModeToggle {
+                display: none !important;
+            }
+
+            /* Shortcuts Button - Small Circle Bottom Right */
+            #keyboardHelpButton {
+                position: fixed !important;
+                bottom: calc(env(safe-area-inset-bottom, 20px) + 20px) !important;
+                right: 20px !important;
+                z-index: 9999 !important;
+                background: rgba(0, 212, 255, 0.9) !important;
+                backdrop-filter: blur(10px) !important;
+                box-shadow: 0 4px 15px rgba(0, 212, 255, 0.5) !important;
+                border: 2px solid #00d4ff !important;
+                padding: 0 !important;
+                border-radius: 50% !important;
+                font-size: 20px !important;
+                font-weight: bold !important;
+                width: 50px !important;
+                height: 50px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            #keyboardHelpButton::before {
+                content: "?" !important;
+            }
+
+            /* Enlarge Splash Screen Images */
+            .splash-nft-container {
+                width: 240px !important;
+                height: 240px !important;
+            }
+
+            .splash-title {
+                font-size: 2.2em !important;
+                margin-bottom: 30px !important;
+            }
+
+            .splash-player-name {
+                font-size: 1.7em !important;
+            }
+
+            .splash-player-id {
+                font-size: 1.2em !important;
+            }
+
+            .splash-gang-name {
+                font-size: 1.15em !important;
+            }
+
+            .splash-vs {
+                font-size: 2.8em !important;
+            }
+
+            /* Reduce Splash Screen Padding */
+            .splash-content {
+                padding: 15px 15px calc(env(safe-area-inset-bottom, 20px) + 15px) 15px;
+            }
+
+            .splash-players {
+                gap: 30px !important;
+                margin-bottom: 30px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .splash-nft-container {
+                width: 200px !important;
+                height: 200px !important;
+            }
+
+            .splash-title {
+                font-size: 1.8em !important;
+            }
+
+            .splash-player-name {
+                font-size: 1.4em !important;
+            }
+
+            #keyboardHelpButton {
+                width: 45px !important;
+                height: 45px !important;
+                font-size: 18px !important;
+            }
+        }
+
+        /* ==== */
+        /* DESKTOP FIX - Hide Mobile Settings Menu */
+        /* ==== */
+
+        /* Hide mobile settings menu elements on desktop */
+        #mobileSettingsIcon,
+        #mobileSettingsMenu,
+        #mobileSettingsOverlay,
+        #mobileTopButtons {
+            display: none !important;
+        }
+
+        /* Show mobile settings only on mobile */
+        @media (max-width: 768px) {
+            #mobileSettingsIcon {
+                display: flex !important;
+            }
+            
+            #mobileTopButtons {
+                display: flex !important;
+            }
+        }
+
 </style>
 </head>
 <body>
+
+    <!-- Mobile Settings Menu -->
+    <div id="mobileSettingsOverlay"></div>
+    <button id="mobileSettingsIcon">⚙️</button>
+    <div id="mobileSettingsMenu">
+        <button class="settings-menu-close">×</button>
+        <div class="settings-menu-title">Settings</div>
+        <button class="settings-menu-item" id="mobileSoundToggle">🔊 Sound</button>
+        <button class="settings-menu-item" id="mobileStatsToggle">📊 Stats</button>
+        <button class="settings-menu-item" id="mobileRollHistoryToggle">📜 Roll History</button>
+        <button class="settings-menu-item" id="mobileTestModeToggle">🧪 Test Mode</button>
+        <button class="settings-menu-item" id="mobileShortcutsToggle">⌨️ Shortcuts</button>
+    </div>
+
     <!-- Sound Toggle Button -->
     <button id="soundToggle" onclick="toggleSound()">🔊 SOUND ON</button>
 
@@ -9106,6 +9340,62 @@
             }
         }
         
+        // Mobile Settings Menu
+        if (window.innerWidth <= 768) {
+            const settingsIcon = document.getElementById('mobileSettingsIcon');
+            const settingsMenu = document.getElementById('mobileSettingsMenu');
+            const settingsOverlay = document.getElementById('mobileSettingsOverlay');
+            const settingsClose = document.querySelector('.settings-menu-close');
+
+            // Open menu
+            settingsIcon.addEventListener('click', () => {
+                settingsMenu.classList.add('show');
+                settingsOverlay.classList.add('show');
+            });
+
+            // Close menu
+            settingsClose.addEventListener('click', () => {
+                settingsMenu.classList.remove('show');
+                settingsOverlay.classList.remove('show');
+            });
+
+            settingsOverlay.addEventListener('click', () => {
+                settingsMenu.classList.remove('show');
+                settingsOverlay.classList.remove('show');
+            });
+
+            // Menu item actions
+            document.getElementById('mobileSoundToggle').addEventListener('click', () => {
+                toggleSound();
+                settingsMenu.classList.remove('show');
+                settingsOverlay.classList.remove('show');
+            });
+
+            document.getElementById('mobileStatsToggle').addEventListener('click', () => {
+                toggleStats();
+                settingsMenu.classList.remove('show');
+                settingsOverlay.classList.remove('show');
+            });
+
+            document.getElementById('mobileRollHistoryToggle').addEventListener('click', () => {
+                toggleRollHistory();
+                settingsMenu.classList.remove('show');
+                settingsOverlay.classList.remove('show');
+            });
+
+            document.getElementById('mobileTestModeToggle').addEventListener('click', () => {
+                toggleTestMode();
+                settingsMenu.classList.remove('show');
+                settingsOverlay.classList.remove('show');
+            });
+
+            document.getElementById('mobileShortcutsToggle').addEventListener('click', () => {
+                toggleKeyboardHelp();
+                settingsMenu.classList.remove('show');
+                settingsOverlay.classList.remove('show');
+            });
+        }
+
     </script>
 
     <!-- ROLL HISTORY TOGGLE BUTTON -->
