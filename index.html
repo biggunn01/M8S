@@ -3479,7 +3479,7 @@
             }
             
             .splash-vs {
-                transform: rotate(90deg);
+                transform: rotate(0deg); /* was 90 */
             }
             
             .splash-nft-container {
@@ -3569,7 +3569,7 @@
             }
             
             .splash-vs {
-                transform: rotate(90deg);
+                transform: rotate(0deg); /* was 90 */
                 font-size: 2em !important;
                 margin: 10px 0 !important;
             }
@@ -3750,29 +3750,12 @@
                 margin-bottom: 8px;
             }
             
-            /* Top buttons row in header */
-            #mobileTopButtons {
-                display: flex;
-                justify-content: center;
-                gap: 6px;
-                flex-wrap: wrap;
-                margin-top: 8px;
-            }
-            
             #soundToggle, #statsToggle, #rollHistoryToggle, #testModeToggle {
                 position: static !important;
                 padding: 6px 12px !important;
                 font-size: 10px !important;
                 margin: 0 !important;
                 flex: 0 1 auto;
-            }
-
-            /* Hide standalone buttons on mobile - show only in header */
-            body > #soundToggle:not(#mobileTopButtons #soundToggle),
-            body > #statsToggle:not(#mobileTopButtons #statsToggle),
-            body > #rollHistoryToggle:not(#mobileTopButtons #rollHistoryToggle),
-            body > #testModeToggle:not(#mobileTopButtons #testModeToggle) {
-                display: none !important;
             }
             
             /* CRITICAL FIX #2: Shortcuts Button - Bottom Right */
@@ -3834,7 +3817,7 @@
             }
             
             .splash-vs {
-                transform: rotate(90deg);
+                transform: rotate(0deg); /* was 90 */
                 font-size: 2.5em !important;
                 margin: 15px 0 !important;
             }
@@ -4275,6 +4258,278 @@
             }
         }
 
+        /* ==== */
+        /* FIX: Keyboard Help Overlay on Mobile */
+        /* ==== */
+
+        @media (max-width: 768px) {
+            /* Ensure keyboard help overlay displays properly on mobile */
+            #keyboardHelpOverlay {
+                z-index: 10003 !important;
+                padding: 20px;
+            }
+            
+            .keyboard-help-content {
+                max-width: 95% !important;
+                max-height: 85vh !important;
+                padding: 25px 20px !important;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+            }
+            
+            .keyboard-help-title {
+                font-size: 1.6em !important;
+                margin-bottom: 20px !important;
+            }
+            
+            .keyboard-help-section-title {
+                font-size: 1.1em !important;
+                margin-bottom: 10px !important;
+            }
+            
+            .keyboard-shortcut-item {
+                padding: 10px 12px !important;
+                margin: 6px 0 !important;
+            }
+            
+            .keyboard-key {
+                padding: 6px 12px !important;
+                font-size: 0.95em !important;
+                min-width: 40px !important;
+                margin-right: 12px !important;
+            }
+            
+            .keyboard-description {
+                font-size: 0.9em !important;
+            }
+            
+            .keyboard-help-close {
+                padding: 10px 25px !important;
+                font-size: 1em !important;
+                margin: 20px auto 0 !important;
+            }
+            
+            .keyboard-help-footer {
+                font-size: 0.9em !important;
+                margin-top: 15px !important;
+            }
+        }
+
+
+        /* ==== */
+        /* MOBILE FIXES V4 - Settings Button & Boost Modal Bottom Padding */
+        /* ==== */
+
+        @media (max-width: 768px) {
+            /* FIX #1: Boost Assignment Modal - Add Bottom Safe Area Padding */
+            .boost-setup-screen {
+                padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 30px) !important;
+            }
+            
+            .setup-buttons {
+                padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 20px) !important;
+                margin-bottom: 0 !important;
+            }
+            
+            /* FIX #2: Ensure Settings Icon is Always Visible and Clickable */
+            #mobileSettingsIcon {
+                position: fixed !important;
+                top: calc(env(safe-area-inset-top, 10px) + 15px) !important;
+                right: 15px !important;
+                background: rgba(0, 212, 255, 0.3) !important;
+                border: 2px solid #00d4ff !important;
+                color: #00d4ff !important;
+                padding: 10px !important;
+                border-radius: 50% !important;
+                cursor: pointer !important;
+                font-size: 20px !important;
+                z-index: 10001 !important;
+                transition: all 0.3s !important;
+                width: 45px !important;
+                height: 45px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                -webkit-tap-highlight-color: rgba(0, 212, 255, 0.3) !important;
+                touch-action: manipulation !important;
+                pointer-events: auto !important;
+            }
+
+            #mobileSettingsIcon:active {
+                background: rgba(0, 212, 255, 0.6) !important;
+                transform: scale(0.95) !important;
+            }
+
+            /* FIX #3: Ensure Settings Menu Slides In Properly */
+            #mobileSettingsMenu {
+                position: fixed !important;
+                top: 0 !important;
+                right: -300px !important;
+                width: 280px !important;
+                height: 100% !important;
+                background: rgba(26, 26, 46, 0.98) !important;
+                backdrop-filter: blur(10px) !important;
+                z-index: 10002 !important;
+                padding: calc(env(safe-area-inset-top, 10px) + 70px) 20px calc(env(safe-area-inset-bottom, 20px) + 20px) 20px !important;
+                box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5) !important;
+                transition: right 0.3s ease !important;
+                border-left: 2px solid rgba(0, 212, 255, 0.3) !important;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+            }
+
+            #mobileSettingsMenu.show {
+                right: 0 !important;
+            }
+
+            /* FIX #4: Settings Menu Title */
+            .settings-menu-title {
+                font-size: 1.5em !important;
+                color: #00d4ff !important;
+                margin-bottom: 20px !important;
+                text-align: center !important;
+                font-weight: bold !important;
+                text-shadow: 0 0 15px rgba(0, 212, 255, 0.5) !important;
+            }
+
+            /* FIX #5: Ensure Menu Items are Touchable */
+            .settings-menu-item {
+                background: rgba(0, 212, 255, 0.1) !important;
+                border: 2px solid rgba(0, 212, 255, 0.3) !important;
+                color: #00d4ff !important;
+                padding: 15px !important;
+                margin-bottom: 12px !important;
+                border-radius: 8px !important;
+                cursor: pointer !important;
+                font-size: 14px !important;
+                font-weight: bold !important;
+                text-align: center !important;
+                transition: all 0.3s !important;
+                width: 100% !important;
+                -webkit-tap-highlight-color: rgba(0, 212, 255, 0.3) !important;
+                touch-action: manipulation !important;
+                pointer-events: auto !important;
+            }
+
+            .settings-menu-item:active {
+                background: rgba(0, 212, 255, 0.4) !important;
+                transform: scale(0.98) !important;
+            }
+
+            /* FIX #6: Ensure Overlay Works */
+            #mobileSettingsOverlay {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                background: rgba(0, 0, 0, 0.7) !important;
+                z-index: 10001 !important;
+                display: none !important;
+                -webkit-tap-highlight-color: transparent !important;
+                pointer-events: auto !important;
+            }
+
+            #mobileSettingsOverlay.show {
+                display: block !important;
+            }
+
+            /* FIX #7: Ensure Close Button Works */
+            .settings-menu-close {
+                position: absolute !important;
+                top: calc(env(safe-area-inset-top, 10px) + 15px) !important;
+                right: 15px !important;
+                background: transparent !important;
+                border: none !important;
+                color: #00d4ff !important;
+                font-size: 30px !important;
+                cursor: pointer !important;
+                padding: 5px !important;
+                line-height: 1 !important;
+                -webkit-tap-highlight-color: rgba(0, 212, 255, 0.3) !important;
+                touch-action: manipulation !important;
+                pointer-events: auto !important;
+                z-index: 1 !important;
+            }
+
+            .settings-menu-close:active {
+                transform: scale(0.9) !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* Extra small phones - adjust settings menu */
+            #mobileSettingsMenu {
+                width: 260px !important;
+                right: -260px !important;
+            }
+            
+            .settings-menu-item {
+                padding: 12px !important;
+                font-size: 13px !important;
+            }
+            
+            .settings-menu-title {
+                font-size: 1.3em !important;
+            }
+        }
+
+
+        /* ==== FINAL FIX FOR MOBILE SETTINGS MENU ==== */
+        @media (max-width: 768px) {
+            /* Force correct z-index layering */
+            #mobileSettingsOverlay {
+                z-index: 15000 !important;
+            }
+            
+            #mobileSettingsMenu {
+                z-index: 15001 !important;
+            }
+            
+            #mobileSettingsIcon {
+                z-index: 15002 !important;
+            }
+            
+            /* Ensure menu is visible when .show class is added */
+            #mobileSettingsMenu.show {
+                right: 0 !important;
+                display: block !important;
+            }
+            
+            /* Ensure all child elements are visible */
+            #mobileSettingsMenu  {
+                pointer-events: auto !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .splash-content {
+                padding: 15px 15px !important; /* Slightly less padding */
+            }
+
+            .splash-title {
+                margin-top: 5px !important;
+                margin-bottom: 10px !important; /* Reduced from larger values */
+            }
+
+            .splash-players {
+                gap: 15px !important; /* Reduced gap between player blocks */
+                margin-bottom: 15px !important;
+            }
+
+            .splash-nft-container {
+                margin-top: 5px !important; /* Less space above images */
+            }
+
+            .splash-match-info {
+                margin-bottom: 15px !important; /* Less space below match info */
+            }
+
+            .splash-continue-btn {
+                margin-bottom: calc(env(safe-area-inset-bottom, 20px) + 10px) !important; /* Keep safe area padding */
+            }
+        }
+
 </style>
 </head>
 <body>
@@ -4294,14 +4549,6 @@
 
     <!-- Sound Toggle Button -->
     <button id="soundToggle" onclick="toggleSound()">🔊 SOUND ON</button>
-
-    <!-- Mobile Top Buttons Container (only shows on mobile) -->
-    <div id="mobileTopButtons" style="display: none;">
-        <button id="soundToggle" onclick="toggleSound()">🔊 SOUND ON</button>
-        <button id="statsToggle" onclick="toggleStats()">📊 STATS (S)</button>
-        <button id="rollHistoryToggle" onclick="toggleRollHistory()">📜 ROLL HISTORY (H)</button>
-        <button id="testModeToggle" onclick="toggleTestMode()">🧪 TEST MODE (T)</button>
-    </div>
 
     <!-- Keyboard Shortcuts Help Overlay -->
     <div id="keyboardHelpOverlay">
@@ -9569,6 +9816,10 @@
             <button class="test-button danger" onclick="resetTournament()">Reset Tournament</button>
             <button class="test-button" onclick="toggleTestMode()">Close Test Mode</button>
         </div>
+
+        <!-- Close button (reuses the keyboard-help-close styles) -->
+            <button class="keyboard-help-close" onclick="toggleTestMode()" aria-label="Close Test Mode">Close</button>
+
     </div>
 
 
@@ -9578,6 +9829,16 @@
     <!-- ROLL HISTORY PANEL -->
     <div id="rollHistoryPanel">
         <div class="roll-history-title">📜 ROLL HISTORY</div>
+
+        <!-- Close button (reuses the keyboard-help-close styles) -->
+        <button
+            class="keyboard-help-close"
+            onclick="toggleRollHistory()"
+            aria-label="Close roll history"
+        >
+            Close
+        </button>
+
         <div class="roll-history-list" id="rollHistoryList">
             <!-- Roll history items will be added here -->
         </div>
