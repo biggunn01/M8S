@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Meta8 Showdown: Brawl</title>
+    <title>Meta8 Showdown</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -50,6 +53,156 @@
 
         .boost-setup-screen.show {
             display: block;
+        }
+
+        /* ==== */
+        /* MODE SELECTION SCREEN */
+        /* ==== */
+        .mode-selection-screen {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .mode-selection-screen.show {
+            display: block;
+        }
+
+        .mode-selection-content {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 40px;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .mode-selection-title {
+            font-size: 2.5em;
+            color: #00d4ff;
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .mode-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .mode-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 3px solid rgba(0, 212, 255, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .mode-card:hover {
+            border-color: #00d4ff;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+            transform: translateY(-5px);
+        }
+
+        .mode-card.selected {
+            border-color: #00ff00;
+            box-shadow: 0 0 40px rgba(0, 255, 0, 0.6);
+            background: rgba(0, 255, 0, 0.1);
+        }
+
+        .mode-icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+
+        .mode-name {
+            font-size: 1.8em;
+            color: #00d4ff;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .mode-description {
+            font-size: 1em;
+            color: #ccc;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .mode-rules {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        .mode-rule-item {
+            font-size: 0.9em;
+            color: #aaa;
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mode-rule-item::before {
+            content: '▸';
+            color: #00d4ff;
+            font-weight: bold;
+        }
+
+        .mode-card-select-btn {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .mode-card-select-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(0, 212, 255, 0.5);
+            background: linear-gradient(135deg, #00ffff 0%, #00b8d4 100%);
+        }
+
+        .mode-card-select-btn:active {
+            transform: translateY(0);
+        }
+
+        .mode-select-button {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+            color: #fff;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+            margin-top: 40px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .mode-select-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .mode-select-button:disabled {
+            background: #666;
+            cursor: not-allowed;
+            opacity: 0.5;
         }
 
         .setup-title {
@@ -2157,7 +2310,7 @@
         }
 
         /* Tablet Portrait / Large Phone - 768px and below */
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             /* Safe area padding for Safari */
             body {
                 padding: env(safe-area-inset-top, 20px) env(safe-area-inset-right, 20px) env(safe-area-inset-bottom, 20px) env(safe-area-inset-left, 20px);
@@ -3492,7 +3645,7 @@
         /* ADDITIONAL MOBILE FIXES - V2Z */
         /* ==== */
 
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             /* CRITICAL FIX #1: Fixed Header Bar for Top Buttons */
             #mobileHeaderBar {
                 position: fixed;
@@ -3694,7 +3847,7 @@
         }
 
         /* Landscape orientation fixes */
-        @media (max-width: 768px) and (orientation: landscape) {
+        @media (max-width: 1024px) and (orientation: landscape) {
             .splash-players {
                 flex-direction: row !important;
                 gap: 40px !important;
@@ -3715,7 +3868,7 @@
         /* MOBILE FIXES V3 - FINAL COMPREHENSIVE UPDATE */
         /* ==== */
 
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             /* Disable double-tap zoom */
             * {
                 touch-action: manipulation;
@@ -3962,7 +4115,7 @@
         }
 
         /* Landscape orientation - better layout */
-        @media (max-width: 768px) and (orientation: landscape) {
+        @media (max-width: 1024px) and (orientation: landscape) {
             .splash-players {
                 flex-direction: row !important;
                 gap: 50px !important;
@@ -3988,7 +4141,7 @@
         /* MOBILE SETTINGS MENU - FIXED VERSION */
         /* ==== */
 
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             /* Settings Icon in Header */
             #mobileSettingsIcon {
                 position: fixed;
@@ -4138,7 +4291,7 @@
         }
 
         /* Show mobile settings only on mobile */
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             #mobileSettingsIcon {
                 display: flex !important;
             }
@@ -4152,7 +4305,7 @@
         /* MOBILE SETTINGS BUTTON FIX - ENSURE TOUCH WORKS */
         /* ==== */
 
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             /* Ensure settings icon is touchable and visible */
             #mobileSettingsIcon {
                 position: fixed !important;
@@ -4262,7 +4415,7 @@
         /* FIX: Keyboard Help Overlay on Mobile */
         /* ==== */
 
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             /* Ensure keyboard help overlay displays properly on mobile */
             #keyboardHelpOverlay {
                 z-index: 10003 !important;
@@ -4320,7 +4473,7 @@
         /* MOBILE FIXES V4 - Settings Button & Boost Modal Bottom Padding */
         /* ==== */
 
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             /* FIX #1: Boost Assignment Modal - Add Bottom Safe Area Padding */
             .boost-setup-screen {
                 padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 30px) !important;
@@ -4476,7 +4629,7 @@
 
 
         /* ==== FINAL FIX FOR MOBILE SETTINGS MENU ==== */
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             /* Force correct z-index layering */
             #mobileSettingsOverlay {
                 z-index: 15000 !important;
@@ -4502,9 +4655,9 @@
             }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             .splash-content {
-                padding: 15px 15px !important; /* Slightly less padding */
+                padding: 12px 12px !important; /* Slightly less padding */
             }
 
             .splash-title {
@@ -4513,8 +4666,8 @@
             }
 
             .splash-players {
-                gap: 15px !important; /* Reduced gap between player blocks */
-                margin-bottom: 15px !important;
+                gap: 12px !important; /* Reduced gap between player blocks */
+                margin-bottom: 12px !important;
             }
 
             .splash-nft-container {
@@ -4528,6 +4681,137 @@
             .splash-continue-btn {
                 margin-bottom: calc(env(safe-area-inset-bottom, 20px) + 10px) !important; /* Keep safe area padding */
             }
+            .splash-player-name {
+                margin: 4px 0 0px 0 !important;     /* reduce space above/below name */
+                padding: 0 !important;
+                /* line-height: 1.05 !important; /* tighten line height */
+            }
+
+            .splash-gang-name {
+                margin: 0px 0 0px 0 !important;     /* less space around gang label */
+                padding: 0 !important;
+                /* font-size: 0.95em !important; /* optional: keep visual hierarchy */
+            }
+
+            .splash-player-id {
+                margin: 0px 0 0px 0 !important; /* small top gap, slightly larger bottom if desired */
+                padding: 0 !important;
+                font-size: 0.9em !important;   /* optional */
+                color: #ccc !important;        /* keep it visually subdued if needed */
+            }
+        }
+
+
+        @media (max-width: 1024px) {
+            
+            .game-container {
+                display: flex !important;
+                flex-direction: column-reverse !important;
+                gap: 15px !important;
+            }
+            .dice-section { margin-bottom: 20px !important; }
+
+                    
+            .splash-players { gap: 15px !important; margin-bottom: 15px !important; }
+            .splash-title { margin-bottom: 10px !important; margin-top: 5px !important; }
+            .splash-player-name { margin: 2px 0 !important; }
+            .splash-gang-name { margin: 0 !important; }
+            .splash-player-id { margin: 0 0 5px 0 !important; }
+            .splash-nft-container { margin-top: 5px !important; }
+
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .splash-nft-container {
+                width: 320px !important;
+                height: 320px !important;
+            }
+            .splash-title {
+                font-size: 2.5em !important;
+            }
+            .splash-player-name {
+                font-size: 2em !important;
+            }
+            .splash-vs {
+                font-size: 3.5em !important;
+                margin: 10px 0 !important;
+            }
+            .splash-content {
+                padding: 40px 20px !important;
+            }
+        }
+
+        /* --- V3N UPDATES --- */
+
+        @media (max-width: 1024px) {
+            .game-container {
+                display: flex !important;
+                flex-direction: column-reverse !important;
+                gap: 15px !important;
+            }
+            .dice-section { 
+                margin-bottom: 20px !important; 
+            }
+        }
+
+
+        @media (max-width: 1024px) {
+            .boost-setup-screen {
+                padding-top: 28px !important;
+            }
+        }
+
+            /* ==== */
+        /* CLASSIC MODES SUBMENU */
+        /* ==== */
+        .classic-modes-screen {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .classic-modes-screen.show {
+            display: block;
+        }
+
+        .back-to-modes-button {
+            background: linear-gradient(135deg, #6c5ce7 0%, #5f4dd1 100%);
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+            margin-bottom: 30px;
+            display: block;
+        }
+
+        .back-to-modes-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(108, 92, 231, 0.5);
+        }
+
+        .mode-card.classic-gateway {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 165, 0, 0.2) 100%);
+            border-color: #ffd700;
+        }
+
+        .mode-card.classic-gateway:hover {
+            border-color: #ffd700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+        }
+
+        .mode-card.placeholder {
+            opacity: 0.5;
+            cursor: not-allowed;
+            border-style: dashed;
+        }
+
+        .mode-card.placeholder:hover {
+            transform: none;
+            box-shadow: none;
         }
 
 </style>
@@ -4569,6 +4853,10 @@
                     <div class="keyboard-key">R</div>
                     <div class="keyboard-description">Enter match replay mode</div>
                 </div>
+                <div class="keyboard-shortcut-item">
+                    <div class="keyboard-key">C</div>
+                    <div class="keyboard-description">Take screenshot</div>
+                  </div>
                 <div class="keyboard-shortcut-item">
                     <div class="keyboard-key">M</div>
                     <div class="keyboard-description">Mute/unmute sounds</div>
@@ -4642,17 +4930,39 @@
 
     <div class="container">
         <header>
-            <h1>META8 SHOWDOWN: BRAWL</h1>
+            <h1>META8 SHOWDOWN</h1>
             <p class="subtitle">Tournament Battle System</p>
         </header>
 
+        <!-- Game Mode Selection Screen -->
+        <div class="mode-selection-screen show" id="modeSelectionScreen">
+            <div class="mode-selection-content">
+                <h2 class="mode-selection-title">⚔️ SELECT GAME MODE ⚔️</h2>
+                <div class="mode-grid" id="modeGrid">
+                    <!-- Mode cards will be generated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Classic Modes Submenu -->
+        <div class="classic-modes-screen" id="classicModesScreen">
+            <div class="mode-selection-content">
+                <h2 class="mode-selection-title">Classic Game Modes</h2>
+                <button class="back-to-modes-button" id="backToModesButton">← Back to Mode Selection</button>
+                <div class="mode-grid" id="classicModeGrid">
+                    <!-- Classic mode cards will be rendered here -->
+                </div>
+            </div>
+        </div>
+
         <!-- Boost Setup Screen -->
-        <div class="boost-setup-screen show" id="boostSetupScreen">
+        <div class="boost-setup-screen" id="boostSetupScreen">
             <div class="setup-title">⚡ Boost Assignment ⚡</div>
             <div class="player-boost-list" id="playerBoostList">
                 <!-- Player boost assignments will be generated here -->
             </div>
             <div class="setup-buttons">
+                <button class="setup-button secondary" onclick="backToModeSelection()">◀ Back to Modes</button>
                 <button class="setup-button secondary" onclick="openCustomPlayersPopup()">👥 Custom Players</button>
                 <button class="setup-button secondary" id="randomizeButton">🎲 Randomize Boosts</button>
                 <button class="setup-button" id="startTournamentButton">▶ Start Tournament</button>
@@ -4751,6 +5061,245 @@
     </div>
 
     <script>
+
+
+        // ====
+        // DATA MANAGER - Centralized Data Storage System
+        // ====
+        class DataManager {
+            constructor() {
+                this.storageKey = 'm8s_data';
+            }
+
+            // Save complete game state
+            saveGameState(gameState) {
+                try {
+                    // Add activeGameMode to the state before saving
+                    if (typeof activeGameMode !== 'undefined') {
+                        gameState.activeGameMode = activeGameMode;
+                    }
+                    localStorage.setItem(this.storageKey, JSON.stringify(gameState));
+                    console.log('Game state saved successfully with mode:', gameState.activeGameMode);
+                    return true;
+                } catch (error) {
+                    console.error('Failed to save game state:', error);
+                    return false;
+                }
+            }
+
+            // Load complete game state
+            loadGameState() {
+                try {
+                    const data = localStorage.getItem(this.storageKey);
+                    if (data) {
+                        const gameState = JSON.parse(data);
+                        // Restore activeGameMode if it exists
+                        if (gameState.activeGameMode) {
+                            activeGameMode = gameState.activeGameMode;
+                            console.log('Game state loaded successfully with mode:', activeGameMode);
+                        } else {
+                            console.log('Game state loaded successfully (no mode saved)');
+                        }
+                        return gameState;
+                    }
+                    console.log('No saved game state found');
+                    return null;
+                } catch (error) {
+                    console.error('Failed to load game state:', error);
+                    return null;
+                }
+            }
+
+            // Clear all saved data
+            clearGameState() {
+                try {
+                    localStorage.removeItem(this.storageKey);
+                    console.log('Game state cleared successfully');
+                    return true;
+                } catch (error) {
+                    console.error('Failed to clear game state:', error);
+                    return false;
+                }
+            }
+
+            // Check if saved data exists
+            hasSavedData() {
+                return localStorage.getItem(this.storageKey) !== null;
+            }
+
+            // Export data as JSON file
+            exportToFile(filename = 'm8s_export') {
+                const gameState = this.loadGameState();
+                if (!gameState) {
+                    console.warn('No data to export');
+                    return false;
+                }
+
+                try {
+                    const dataStr = JSON.stringify(gameState, null, 2);
+                    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                    const url = URL.createObjectURL(dataBlob);
+
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `${filename}_${Date.now()}.json`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+
+                    console.log('Data exported successfully');
+                    return true;
+                } catch (error) {
+                    console.error('Failed to export data:', error);
+                    return false;
+                }
+            }
+
+            // Import data from JSON object
+            importFromData(jsonData) {
+                try {
+                    this.saveGameState(jsonData);
+                    console.log('Data imported successfully');
+                    return true;
+                } catch (error) {
+                    console.error('Failed to import data:', error);
+                    return false;
+                }
+            }
+        }
+
+        // Initialize DataManager globally
+        const dataManager = new DataManager();
+
+
+        // ============================================================
+        // GAME MODES SYSTEM
+        // ============================================================
+
+        const GAME_MODES = {
+            classic: {
+                id: 'classic',
+                name: 'Classic Showdown',
+                description: 'Standard 8-fighter tournament with all boosts and interference enabled.',
+                playerCount: 8,
+                rounds: [
+                    { bestOf: 3 },  // Round 1
+                    { bestOf: 5 },  // Round 2
+                    { bestOf: 7 }   // Finals
+                ],
+                boostsEnabled: true,
+                interferenceEnabled: true,
+                interferenceChance: 0.5,
+                icon: '🏆'
+            },
+            quickDraw: {
+                id: 'quickDraw',
+                name: 'Quick Draw',
+                description: 'Fast-paced 8-fighter tournament. Only 1 regulation round, boosts enabled.',
+                playerCount: 8,
+                rounds: [
+                    { bestOf: 1 },  // Round 1 - Single roll
+                    { bestOf: 1 },  // Round 2 - Single roll
+                    { bestOf: 1 }   // Finals - Single roll
+                ],
+                boostsEnabled: true,
+                interferenceEnabled: false,
+                interferenceChance: 0,
+                icon: '⚡'
+            },
+            chaos: {
+                id: 'chaos',
+                name: 'Chaos Mode',
+                description: '16-fighter mayhem with maximum interference and all boosts active.',
+                playerCount: 16,
+                rounds: [
+                    { bestOf: 3 },  // Round 1
+                    { bestOf: 3 },  // Round 2
+                    { bestOf: 5 },  // Round 3
+                    { bestOf: 7 }   // Finals
+                ],
+                boostsEnabled: true,
+                interferenceEnabled: true,
+                interferenceChance: 0.75,  // Higher interference chance
+                icon: '🌪️'
+            },
+            pure: {
+                id: 'pure',
+                name: 'Pure Skill',
+                description: '8 fighters, no boosts, no interference. Just raw competition.',
+                playerCount: 8,
+                rounds: [
+                    { bestOf: 3 },  // Round 1
+                    { bestOf: 5 },  // Round 2
+                    { bestOf: 7 }   // Finals
+                ],
+                boostsEnabled: false,
+                interferenceEnabled: false,
+                interferenceChance: 0,
+                icon: '⚔️'
+            },
+            grandTournament: {
+                id: 'grandTournament',
+                name: 'Grand Tournament',
+                description: 'Epic 32-fighter bracket with full regulation rounds and all features.',
+                playerCount: 32,
+                rounds: [
+                    { bestOf: 3 },  // Round 1
+                    { bestOf: 3 },  // Round 2
+                    { bestOf: 5 },  // Round 3
+                    { bestOf: 5 },  // Round 4
+                    { bestOf: 7 }   // Finals
+                ],
+                boostsEnabled: true,
+                interferenceEnabled: true,
+                interferenceChance: 0.5,
+                icon: '👑'
+            }
+        };
+
+        // Active game mode
+        let activeGameMode = GAME_MODES.classic;
+
+        // Get current mode rules
+        function getModeRules() {
+            return activeGameMode;
+        }
+
+        // Check if boost is allowed in current mode
+        function isBoostAllowedInMode(boostId) {
+            const rules = getModeRules();
+            if (!rules || !rules.boostsEnabled) return false;
+            
+            // If no boostId provided, just check if boosts are enabled
+            if (!boostId) return true;
+            
+            // All boosts are allowed in modes with boosts enabled
+            return true;
+        }
+
+        // Check if interference is enabled in current mode
+        function isInterferenceEnabledInMode() {
+            const rules = getModeRules();
+            return rules ? rules.interferenceEnabled : false;
+        }
+
+        // Get player count for current mode
+        function getPlayerCount() {
+            const rules = getModeRules();
+            return rules ? rules.playerCount : 8;
+        }
+
+        // Get regulation rounds for current mode
+        function getRegulationRounds() {
+            const rules = getModeRules();
+            return rules ? rules.regulationRounds : 3;
+        }
+
+        // Check if interference is enabled in current mode
+        function isInterferenceEnabledInMode() {
+            return getModeRules().interferenceEnabled;
+        }
 
         // Convert hex color to RGB for rgba usage
         function hexToRgb(hex) {
@@ -6249,7 +6798,14 @@
             1000: { gang: 'Rogue Riders' },
         };
 
+        // Generate allFighters array from METADATA
+        const allFighters = Object.keys(METADATA).map(id => ({
+            id: parseInt(id),
+            name: `Fighter #${id}`,
+            gang: METADATA[id].gang
+        }));
 
+        console.log(`Loaded ${allFighters.length} fighters from metadata`);
 
         // Helper functions for metadata
         function getRidersByGang(gangName) {
@@ -6258,39 +6814,37 @@
             .map(id => parseInt(id));
         }
 
-        function setupTournamentRiders() {
-            const gangs = ['Bit Bandits', 'Nexus Nomads', 'Rogue Riders', 'Talisman Tribe'];
-            const leftBracket = [];  // Will become P1-P4
-            const rightBracket = []; // Will become P5-P8
-            const usedRiderIds = new Set();
+        function setupTournamentRiders(playerCount = 8) {
+            riders = [];
             
-            gangs.forEach(gangName => {
-                const gangRiders = getRidersByGang(gangName);
-                const shuffled = gangRiders.sort(() => Math.random() - 0.5);
-                
-                // Pick first unique rider for left bracket
-                let leftRider = shuffled[0];
-                usedRiderIds.add(leftRider);
-                leftBracket.push(leftRider);
-                
-                // Pick second unique rider for right bracket
-                let rightRider = shuffled.find(id => !usedRiderIds.has(id));
-                if (rightRider) {
-                    usedRiderIds.add(rightRider);
-                    rightBracket.push(rightRider);
-                } else {
-                    rightRider = shuffled[1];
-                    usedRiderIds.add(rightRider);
-                    rightBracket.push(rightRider);
-                }
+            // Ensure we have enough fighters
+            if (allFighters.length < playerCount) {
+                console.error(`Not enough fighters! Need ${playerCount}, have ${allFighters.length}`);
+                playerCount = allFighters.length;
+            }
+            
+            // Shuffle and select the required number of fighters
+            const shuffled = [...allFighters].sort(() => Math.random() - 0.5);
+            const selectedFighters = shuffled.slice(0, playerCount);
+            
+            // Store selected rider IDs for return
+            const selectedRiderIds = [];
+            
+            // Create rider objects
+            selectedFighters.forEach((fighter, index) => {
+                riders.push({
+                    id: index + 1,
+                    name: fighter.name,
+                    seed: index + 1,
+                    boosts: [],
+                    usedBoosts: []
+                });
+                selectedRiderIds.push(fighter.id); // ✅ Track the actual fighter IDs
             });
             
-            // Shuffle within each bracket for randomness
-            const shuffledLeft = leftBracket.sort(() => Math.random() - 0.5);
-            const shuffledRight = rightBracket.sort(() => Math.random() - 0.5);
+            console.log(`Tournament initialized with ${playerCount} fighters:`, riders.map(r => r.name));
             
-            // ✅ FIX: Return left bracket first (P1-P4), then right bracket (P5-P8)
-            return [...shuffledLeft, ...shuffledRight];
+            return selectedRiderIds; // ✅ RETURN THE IDS
         }
 
 
@@ -6312,11 +6866,18 @@
         //};
 
         // Gang Icons (Google Drive hosted) - FIXED URLs
+        //const GANG_ICONS = {
+            //'Nexus Nomads': 'https://lh3.googleusercontent.com/d/1QA6L7Y2gZfpq7NsTAFkGCZvyy9MDwal1',
+            //'Rogue Riders': 'https://lh3.googleusercontent.com/d/1QwJ71ZMW88br2TJia_UrpipStkUXOauK',
+            //'Talisman Tribe': 'https://lh3.googleusercontent.com/d/12UTMmJpRBkubZyJ2MrNvt62tY2VP6Zb1',
+            //'Bit Bandits': 'https://lh3.googleusercontent.com/d/11dBDZF7rWnhAwEmPrnJHTJYPOMVKpvZP'
+        //};
+
         const GANG_ICONS = {
-            'Nexus Nomads': 'https://lh3.googleusercontent.com/d/1QA6L7Y2gZfpq7NsTAFkGCZvyy9MDwal1',
-            'Rogue Riders': 'https://lh3.googleusercontent.com/d/1QwJ71ZMW88br2TJia_UrpipStkUXOauK',
-            'Talisman Tribe': 'https://lh3.googleusercontent.com/d/12UTMmJpRBkubZyJ2MrNvt62tY2VP6Zb1',
-            'Bit Bandits': 'https://lh3.googleusercontent.com/d/11dBDZF7rWnhAwEmPrnJHTJYPOMVKpvZP'
+            'Nexus Nomads': 'https://raw.githubusercontent.com/biggunn01/M8S/main/Icons/Nexus_Nomads_Icon.png',
+            'Rogue Riders': 'https://raw.githubusercontent.com/biggunn01/M8S/main/Icons/Rogue_Riders_Icon.png',
+            'Talisman Tribe': 'https://raw.githubusercontent.com/biggunn01/M8S/main/Icons/Talisman_Tribe_Icon.png',
+            'Bit Bandits': 'https://raw.githubusercontent.com/biggunn01/M8S/main/Icons/Bit_Bandit_Icon.png'
         };
 
         // Helper function to get gang icon HTML
@@ -6362,51 +6923,238 @@
 
         // Initialize game
         function initGame() {
-            // Setup tournament riders (2 from each gang)
-            const selectedRiderIds = setupTournamentRiders();
+            renderModeSelection();
+            }
+
+            function renderModeSelection() {
+                const modeGrid = document.getElementById('modeGrid');
+                modeGrid.innerHTML = '';
+
+                // Add Classic Modes gateway card FIRST
+                const classicGatewayCard = document.createElement('div');
+                classicGatewayCard.className = 'mode-card classic-gateway';
+                classicGatewayCard.innerHTML = `
+                    <div class="mode-icon">🏆</div>
+                    <div class="mode-name">Classic Modes</div>
+                    <div class="mode-description">
+                        Play the original game modes from Meta8 Showdown
+                    </div>
+                `;
+                classicGatewayCard.addEventListener('click', () => {
+                    showClassicModesSubmenu();
+                });
+                modeGrid.appendChild(classicGatewayCard);
+
+                // Render other modes
+                Object.keys(GAME_MODES).forEach(modeKey => {
+                    const mode = GAME_MODES[modeKey];
+                    const card = document.createElement('div');
+                    card.className = 'mode-card';
+                    card.dataset.mode = modeKey;
+                    
+                    card.innerHTML = `
+                        <div class="mode-icon">${mode.icon}</div>
+                        <div class="mode-name">${mode.name}</div>
+                        <div class="mode-description">${mode.description}</div>
+                    `;
+                    
+                    card.addEventListener('click', () => selectMode(modeKey));
+                    modeGrid.appendChild(card);
+                });
+            }
+
+            // Select a game mode
+            function selectMode(modeId) {
+                // Remove previous selection
+                document.querySelectorAll('.mode-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                
+                // Mark new selection
+                const selectedCard = document.querySelector(`.mode-card[data-mode="${modeId}"]`);
+                if (selectedCard) {
+                    selectedCard.classList.add('selected');
+                }
+                activeGameMode = GAME_MODES[modeId];
+                
+                // Now start the mode
+                const modeRules = getModeRules();
+                console.log(`Starting ${modeRules.name} with ${modeRules.playerCount} fighters`);
+                
+                // Hide mode selection
+                document.getElementById('modeSelectionScreen').classList.remove('show');
+                
+                // Initialize players based on mode
+                initializePlayers();
+                
+                // Show boost setup or skip if boosts disabled
+                if (isBoostAllowedInMode()) {
+                    document.getElementById('boostSetupScreen').classList.add('show');
+                    renderBoostSetup();
+                } else {
+                    startTournamentWithoutBoosts();
+                }
+            }
             
-            // Populate COLORS and GANG_NAMES arrays based on selected riders
-            COLORS = [];
-            GANG_NAMES = [];
-            selectedRiderIds.forEach(riderId => {
-                const gangName = METADATA[riderId]?.gang || 'Bit Bandits';
-                GANG_NAMES.push(gangName);
-                COLORS.push(GANG_COLORS[gangName] || '#ffffff');
+
+
+            function startTournamentWithoutBoosts() {
+            // Skip boost assignment, go straight to tournament
+            riders.forEach(rider => {
+                rider.boosts = [];
+                rider.usedBoosts = [];
             });
             
-            // Create 8 players
+            startTournament();
+        }
+
+
+        function showClassicModesSubmenu() {
+            document.getElementById('modeSelectionScreen').classList.remove('show');
+            document.getElementById('classicModesScreen').classList.add('show');
+            renderClassicModes();
+        }
+
+        function hideClassicModesSubmenu() {
+            document.getElementById('classicModesScreen').classList.remove('show');
+            document.getElementById('modeSelectionScreen').classList.add('show');
+        }
+
+        function renderClassicModes() {
+            const classicGrid = document.getElementById('classicModeGrid');
+            classicGrid.innerHTML = '';
+
+            // Placeholder classic modes (to be implemented later)
+            const placeholderModes = [
+                { name: 'Standard 8', icon: '⚔️', description: 'Classic 8-player tournament' },
+                { name: 'Quick Match', icon: '⚡', description: 'Fast-paced 4-player battles' },
+                { name: 'Endurance', icon: '🛡️', description: 'Extended tournament format' },
+                { name: 'Coming Soon', icon: '🔒', description: 'More modes in development' }
+            ];
+
+            placeholderModes.forEach(mode => {
+                const card = document.createElement('div');
+                card.className = 'mode-card placeholder';
+                card.innerHTML = `
+                    <div class="mode-icon">${mode.icon}</div>
+                    <div class="mode-name">${mode.name}</div>
+                    <div class="mode-description">${mode.description}</div>
+                    <div class="mode-rules">
+                        <div class="mode-rule-item">Coming Soon</div>
+                    </div>
+                `;
+                classicGrid.appendChild(card);
+            });
+        }
+
+        // Back button event listener
+        document.getElementById('backToModesButton').addEventListener('click', hideClassicModesSubmenu);
+
+
+        // Start mode immediately when card button is clicked
+        function startModeImmediately(modeId) {
+            activeGameMode = GAME_MODES[modeId];
+            
+            console.log(`Starting mode: ${activeGameMode.name}`);
+            
+            // Hide mode selection
+            document.getElementById('modeSelectionScreen').classList.remove('show');
+            
+            // Check if Pure Showdown (no boosts)
+            if (activeGameMode.id === 'pure') {
+                // Skip boost setup entirely, go straight to tournament
+                initializePlayers();
+                
+                // Auto-start tournament for Pure mode
+                document.getElementById('startTournamentButton').click();
+            } else {
+                // Show boost setup for other modes
+                document.getElementById('boostSetupScreen').classList.add('show');
+                initializePlayers();
+            }
+        }
+
+        // Back to Mode Selection
+        function backToModeSelection() {
+            if (!confirm('Go back to mode selection? Current boost setup will be lost.')) {
+                return;
+            }
+            
+            // Hide boost setup, show mode selection
+            document.getElementById('boostSetupScreen').classList.remove('show');
+            document.getElementById('modeSelectionScreen').classList.add('show');
+            
+            // Reset active mode
+            activeGameMode = null;
+            
+            // Re-render mode selection
+            renderModeSelection();
+            
+            console.log('Returned to mode selection');
+        }
+
+        // Initialize players based on active mode
+        function initializePlayers() {
+            const rules = getModeRules();
+            const playerCount = rules.playerCount;
+            
+            // Setup tournament riders
+            const selectedRiderIds = setupTournamentRiders(playerCount);
+            
+            console.log('Selected Rider IDs:', selectedRiderIds);  // ✅ Debug log
+            
+            // Create players directly
             players = [];
-            for (let i = 0; i < 8; i++) {
+            for (let i = 0; i < playerCount; i++) {
                 const riderId = String(selectedRiderIds[i]);
-                const gangName = GANG_NAMES[i];
-                const gangColor = COLORS[i];
+                const gangName = METADATA[riderId]?.gang || 'Bit Bandits';
+                const gangColor = GANG_COLORS[gangName] || '#f9ca24';
 
                 players.push({
                     id: i,
                     name: `Player ${i + 1}`,
                     riderId: riderId,
-                    color: gangColor,  // ✅ Now has actual gang color!
-                    gang: gangName,    // ✅ Now has actual gang name!
+                    color: gangColor,
+                    gang: gangName,
                     initials: `P${i + 1}`,
                     primaryBoost: 'none',
                     secondaryBoost: 'none',
                     roundRestriction: 'any',
-                    usedBoosts: [],
-                    boostUseCount: {}
+                    boostUseCount: {},
+                    usedBoosts: []
                 });
             }
+            console.log('Players created:', players);  // ✅ Debug log        
+            // Auto-assign boosts if enabled
+            // Boosts start as 'none' - user can manually assign or randomize
+            // (No auto-assignment on mode selection)
+            //if (rules.boostsEnabled) {
+                //autoAssignBoosts();
+            //}
 
+            // Auto-randomize boosts if enabled in mode
+            //if (rules.boostsEnabled) {
+                // Trigger the randomize logic
+                //document.getElementById('randomizeButton').click();
+            //}
+            
             renderBoostSetup();
         }
 
         // Render boost setup screen
         function renderBoostSetup() {
+            // Check if boosts are disabled in current mode
+            const modeRules = getModeRules();
+            if (!modeRules.boostsEnabled) {
+                console.log('Boosts disabled in current mode, skipping boost setup');
+                return;
+            }
             const list = document.getElementById('playerBoostList');
             let html = '';
 
             players.forEach(player => {
                 html += `<div class="player-boost-item">`;
-                    html += `
+                html += `
                     <div class="player-boost-avatar" style="border-color: ${player.color}">
                         <img src="${getPlayerNFTUrl(player.riderId)}" alt="${player.name}">
                     </div>
@@ -6418,11 +7166,13 @@
 
                 // Primary Boost
                 html += `<div class="boost-column">`;
-                html += `<div class="boost-label">Primary Boost</div>`;
                 html += `<select class="boost-select primary-boost" data-player-id="${player.id}">`;
                 PRIMARY_BOOSTS.forEach(boost => {
-                    const selected = player.primaryBoost === boost.id ? 'selected' : '';
-                    html += `<option value="${boost.id}" ${selected}>${boost.name}</option>`;
+                    // Filter boosts based on game mode
+                    if (isBoostAllowedInMode(boost.id)) {
+                        const selected = player.primaryBoost === boost.id ? 'selected' : '';
+                        html += `<option value="${boost.id}" ${selected}>${boost.name}</option>`;
+                    }
                 });
                 html += `</select>`;
                 html += `</div>`;
@@ -6435,14 +7185,17 @@
                 const hasPrimaryBoost = player.primaryBoost !== 'none';
                 const hasSaboteur = player.primaryBoost === 'saboteur';
                 SECONDARY_BOOSTS.forEach(boost => {
+                    // Filter boosts based on game mode first
+                    if (!isBoostAllowedInMode(boost.id)) return;
+                    
                     // Double Play only for players with primary boost (except Saboteur)
                     // Thief and Scavenger only for players without primary boost
                     if (boost.id === 'none' || 
-                    (boost.id === 'doubleplay' && hasPrimaryBoost && !hasSaboteur) ||
-                    (boost.id === 'thief' && !hasPrimaryBoost) ||
-                    (boost.id === 'scavenger' && !hasPrimaryBoost)) {
-                    const selected = player.secondaryBoost === boost.id ? 'selected' : '';
-                    html += `<option value="${boost.id}" ${selected}>${boost.name}</option>`;
+                        (boost.id === 'doubleplay' && hasPrimaryBoost && !hasSaboteur) ||
+                        (boost.id === 'thief' && !hasPrimaryBoost) ||
+                        (boost.id === 'scavenger' && !hasPrimaryBoost)) {
+                        const selected = player.secondaryBoost === boost.id ? 'selected' : '';
+                        html += `<option value="${boost.id}" ${selected}>${boost.name}</option>`;
                     }
                 });
                 html += `</select>`;
@@ -6459,7 +7212,7 @@
                 html += `</select>`;
                 html += `</div>`;
 
-                html += `</div>`;
+                html += `</div>`; // ✅ Close player-boost-item here
             });
 
             list.innerHTML = html;
@@ -6500,6 +7253,30 @@
                     players[playerId].roundRestriction = this.value;
                 });
             });
+        }
+
+        // Assign boosts to riders based on mode
+        function assignBoostsToRiders() {
+            if (!isBoostAllowedInMode()) {
+                console.log('Boosts disabled in this mode');
+                return;
+            }
+            
+            const playerCount = getPlayerCount();
+            const boostsPerRider = 3; // Standard 3 boosts per fighter
+            
+            riders.forEach(rider => {
+                rider.boosts = [];
+                rider.usedBoosts = [];
+                
+                // Assign random boosts
+                for (let i = 0; i < boostsPerRider; i++) {
+                    const randomBoost = availableBoosts[Math.floor(Math.random() * availableBoosts.length)];
+                    rider.boosts.push(randomBoost);
+                }
+            });
+            
+            console.log(`Assigned ${boostsPerRider} boosts to ${playerCount} fighters`);
         }
 
         // Randomize boosts
@@ -6558,15 +7335,27 @@
 
         // Generate interference for the tournament
         function generateInterference() {
+            // Check if interference is enabled in current mode
+            if (!isInterferenceEnabledInMode()) {
+                console.log('Interference disabled in current game mode');
+                return {
+                    decryptor: null,
+                    cosmicStorm: null
+                };
+            }
+
+            const modeRules = getModeRules();
+            const interferenceChance = modeRules.interferenceChance || 0.5;
+
             const interference = {
                 decryptor: null,
                 cosmicStorm: null
             };
 
-            // 50% chance for Decryptor Interference
-            if (Math.random() < 0.5) {
+            // Use mode-specific interference chance for Decryptor
+            if (Math.random() < interferenceChance) {
                 const round = Math.random() < 0.5 ? 1 : 2;
-                const matchCount = round === 1 ? 4 : 2;
+                const matchCount = round === 1 ? Math.floor(modeRules.playerCount / 2) : Math.floor(modeRules.playerCount / 4);
                 const matchIndex = Math.floor(Math.random() * matchCount);
                 const reduction = round === 1 ? 1 : 2;
 
@@ -6579,26 +7368,26 @@
                 console.log(`Decryptor Interference: Round ${round}, Match ${matchIndex + 1}, -${reduction} rounds`);
             }
 
-            // 50% chance for Cosmic Storm (only targets matches with primary boosts)
-            if (Math.random() < 0.5) {
+            // Use mode-specific interference chance for Cosmic Storm
+            if (Math.random() < interferenceChance) {
                 const round = Math.random() < 0.5 ? 1 : 2;
 
                 // Get matches for this round
                 let potentialMatches = [];
                 if (round === 1) {
-                    potentialMatches = [
-                        { index: 0, players: [players[0], players[1]] },
-                        { index: 1, players: [players[2], players[3]] },
-                        { index: 2, players: [players[4], players[5]] },
-                        { index: 3, players: [players[6], players[7]] }
-                    ];
+                    const matchCount = Math.floor(modeRules.playerCount / 2);
+                    for (let i = 0; i < matchCount; i++) {
+                        potentialMatches.push({
+                            index: i,
+                            players: [players[i * 2], players[i * 2 + 1]]
+                        });
+                    }
                 } else {
-                    // For Round 2, we don't know winners yet, so just pick randomly
-                    // We'll validate when the round starts
-                    potentialMatches = [
-                        { index: 0, players: [] },
-                        { index: 1, players: [] }
-                    ];
+                    // For Round 2, we don't know winners yet
+                    const matchCount = Math.floor(modeRules.playerCount / 4);
+                    for (let i = 0; i < matchCount; i++) {
+                        potentialMatches.push({ index: i, players: [] });
+                    }
                 }
 
                 // Filter matches where at least one player has a primary boost
@@ -6628,6 +7417,8 @@
 
         // Start tournament
         document.getElementById('startTournamentButton').addEventListener('click', function() {
+            const modeRules = getModeRules();
+            
             console.log('Starting tournament with boosts:', players.map(p => ({ 
                 name: p.name, 
                 primary: p.primaryBoost, 
@@ -6635,23 +7426,36 @@
                 rounds: p.roundRestriction
             })));
 
-            // Generate interference
-            tournamentInterference = generateInterference();
+            // Generate interference if enabled in mode
+            if (modeRules.interferenceEnabled) {
+                tournamentInterference = generateInterference();
+            } else {
+                tournamentInterference = { decryptor: null, cosmicStorm: null };
+                console.log('Interference disabled for this mode');
+            }
 
             // Hide setup, show game
             document.getElementById('boostSetupScreen').classList.remove('show');
             document.getElementById('gameArea').classList.add('show');
 
-            // Setup Round 1 matches
+            // Setup Round 1 matches based on mode
             currentRound = 1;
             currentMatchIndex = 0;
+            const round1BestOf = modeRules.rounds[0].bestOf; // Get Round 1 bestOf from mode rules
 
-            matches = [
-                { player1: players[0], player2: players[1], bestOf: 3, scores: [], winner: null },
-                { player1: players[2], player2: players[3], bestOf: 3, scores: [], winner: null },
-                { player1: players[4], player2: players[5], bestOf: 3, scores: [], winner: null },
-                { player1: players[6], player2: players[7], bestOf: 3, scores: [], winner: null }
-            ];
+            // Create matches dynamically based on player count
+            matches = [];
+            for (let i = 0; i < players.length; i += 2) {
+                matches.push({
+                    player1: players[i],
+                    player2: players[i + 1],
+                    bestOf: round1BestOf,
+                    scores: [],
+                    winner: null
+                });
+            }
+            
+            console.log(`Created ${matches.length} matches for Round 1 (Best of ${round1BestOf})`);
 
             // Apply Decryptor Interference to Round 1 if applicable
             if (tournamentInterference.decryptor && tournamentInterference.decryptor.round === 1) {
@@ -7477,8 +8281,13 @@
                 }
             });
 
-            // Fill remaining empty dots up to bestOf
-            for (let i = match.scores.length; i < match.bestOf; i++) {
+            // ✅ FIX: Always render dots based on ORIGINAL regulation count (before Decryptor)
+            const originalBestOf = match.decryptorInterference 
+                ? match.bestOf + match.decryptorInterference 
+                : match.bestOf;
+
+            // Fill remaining empty dots up to ORIGINAL bestOf
+            for (let i = match.scores.length; i < originalBestOf; i++) {
                 html += `<div class="dot"></div>`;
             }
 
@@ -7929,9 +8738,10 @@
                     // STORE ROUND 1 MATCHES FOR HISTORY
                     window.round1Matches = JSON.parse(JSON.stringify(matches));
 
+                    const round2BestOf = getModeRules().rounds[1].bestOf;
                     matches = [
-                        { player1: winners[0], player2: winners[1], bestOf: 5, scores: [], winner: null },
-                        { player1: winners[2], player2: winners[3], bestOf: 5, scores: [], winner: null }
+                        { player1: winners[0], player2: winners[1], bestOf: round2BestOf, scores: [], winner: null },
+                        { player1: winners[2], player2: winners[3], bestOf: round2BestOf, scores: [], winner: null }
                     ];
 
                     // Apply Decryptor Interference to Round 2 if applicable
@@ -7980,8 +8790,9 @@
                     // STORE ROUND 2 MATCHES FOR HISTORY
                     window.round2Matches = JSON.parse(JSON.stringify(matches));
 
+                    const round3BestOf = getModeRules().rounds[2].bestOf;
                     matches = [
-                    { player1: winners[0], player2: winners[1], bestOf: 7, scores: [], winner: null }
+                        { player1: winners[0], player2: winners[1], bestOf: round3BestOf, scores: [], winner: null }
                     ];
 
                     // Check for Gang Takeover
@@ -8274,6 +9085,10 @@
                 case 'p':
                     const resetBtn = document.getElementById('resetMatchButton');
                     if (resetBtn) resetBtn.click();
+                    break;
+
+                case 'c':
+                    takeScreenshot();
                     break;
 
                 case 'o':
@@ -8824,6 +9639,53 @@
             alert('Tournament data exported successfully!');
         }
 
+        // Take screenshot of current view
+        function takeScreenshot() {
+            // Get the main container element
+            const captureElement = document.querySelector('.container');
+            
+            if (!captureElement) {
+                alert('Unable to capture screenshot!');
+                return;
+            }
+            
+            // Show loading message
+            const originalText = document.getElementById('resultMessage').textContent;
+            document.getElementById('resultMessage').textContent = '📸 Capturing screenshot...';
+            
+            // Use html2canvas to capture the element
+            html2canvas(captureElement, {
+                backgroundColor: '#1a1a2e',
+                scale: 2, // Higher quality
+                logging: false,
+                useCORS: true,
+                allowTaint: true
+            }).then(canvas => {
+                // Convert canvas to blob
+                canvas.toBlob(blob => {
+                    // Create download link
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `meta8_showdown_screenshot_${Date.now()}.png`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                    
+                    // Restore message
+                    document.getElementById('resultMessage').textContent = originalText;
+                    
+                    console.log('Screenshot captured successfully!');
+                    alert('Screenshot saved!');
+                });
+            }).catch(error => {
+                console.error('Screenshot failed:', error);
+                document.getElementById('resultMessage').textContent = originalText;
+                alert('Screenshot failed! Check console for details.');
+            });
+        }
+
         // ====
         // BRACKET VISUALIZATION SYSTEM
         // ====
@@ -9041,11 +9903,11 @@
             streakPlayer: null
         };
 
-        // Load stats from localStorage
+        // Load stats from localStorage (via DataManager)
         function loadStats() {
-            const saved = localStorage.getItem('meta8Stats');
-            if (saved) {
-                const loadedStats = JSON.parse(saved);
+            const savedData = dataManager.loadGameState();
+            if (savedData && savedData.stats) {
+                const loadedStats = savedData.stats;
                 
                 // Migration: Add new stats if they don't exist
                 if (loadedStats.suddenDeathMatches === undefined) {
@@ -9061,15 +9923,18 @@
                 delete loadedStats.highestRoll;  // Clean up old stat
                 
                 gameStats = loadedStats;
-                console.log('Stats loaded from localStorage (with migration)');
+                console.log('Stats loaded from DataManager');
             }
         }
 
-        // Save stats to localStorage
+        // Save stats to localStorage (via DataManager)
         function saveStats() {
             try {
-                localStorage.setItem('meta8ShowdownStats', JSON.stringify(gameStats));
-                console.log('Stats saved to localStorage');
+                // Load existing data, update stats, save back
+                let gameState = dataManager.loadGameState() || {};
+                gameState.stats = gameStats;
+                dataManager.saveGameState(gameState);
+                console.log('Stats saved via DataManager');
             } catch (e) {
                 console.error('Failed to save stats:', e);
             }
@@ -9808,6 +10673,7 @@
             <h3>📥 Export</h3>
             <button class="test-button" onclick="exportMatch()">Export Match</button>
             <button class="test-button" onclick="exportTournament()">Export Tournament</button>
+            <button class="test-button success" onclick="takeScreenshot()">📸 Screenshot</button>
         </div>
 
         <!-- Quick Actions -->
@@ -9830,18 +10696,13 @@
     <div id="rollHistoryPanel">
         <div class="roll-history-title">📜 ROLL HISTORY</div>
 
-        <!-- Close button (reuses the keyboard-help-close styles) -->
-        <button
-            class="keyboard-help-close"
-            onclick="toggleRollHistory()"
-            aria-label="Close roll history"
-        >
-            Close
-        </button>
-
         <div class="roll-history-list" id="rollHistoryList">
             <!-- Roll history items will be added here -->
         </div>
+
+        <!-- Close button (reuses the keyboard-help-close styles) -->
+        <button class="keyboard-help-close" onclick="toggleRollHistory()" aria-label="Close roll history">Close</button>
+
     </div>
 
     <!-- STATS TOGGLE BUTTON -->
