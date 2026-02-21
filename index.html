@@ -12802,18 +12802,26 @@
             overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
         }
 
-        // Close auth modal on backdrop click
-        document.getElementById('authModal').addEventListener('click', e => {
-            if (e.target === document.getElementById('authModal')) window.closeAuthModal();
-        });
+        // Attach auth modal listeners after DOM is ready
+        window.addEventListener('DOMContentLoaded', () => {
+            const authModal = document.getElementById('authModal');
+            const authPassword = document.getElementById('authPassword');
 
-        // Allow Enter key to submit email/password
-        document.getElementById('authPassword').addEventListener('keydown', e => {
-            if (e.key === 'Enter') {
-                window.authSignInEmail(
-                    document.getElementById('authEmail').value,
-                    document.getElementById('authPassword').value
-                );
+            if (authModal) {
+                authModal.addEventListener('click', e => {
+                    if (e.target === authModal) window.closeAuthModal();
+                });
+            }
+
+            if (authPassword) {
+                authPassword.addEventListener('keydown', e => {
+                    if (e.key === 'Enter') {
+                        window.authSignInEmail(
+                            document.getElementById('authEmail').value,
+                            document.getElementById('authPassword').value
+                        );
+                    }
+                });
             }
         });
 
