@@ -19,6 +19,7 @@
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: #fff;
             min-height: 100vh;
+            min-height: -webkit-fill-available; /* Safari fix: prevents layout jump from dynamic toolbar */
             padding: 20px;
         }
 
@@ -2815,7 +2816,8 @@
             .game-area {
                 grid-template-columns: 1fr;
                 gap: 15px;
-                margin-bottom: env(safe-area-inset-bottom, 90px);
+                padding-bottom: max(env(safe-area-inset-bottom, 0px), 80px);
+                margin-bottom: 0;
             }
             
             .bracket-section {
@@ -6358,11 +6360,10 @@
             const id = parseInt(riderId, 10);
 
             if (!id || id < 1 || id > 1000) {
-                // Fallback: use ID 0 default avatar
-                return "Images/PFPS/0.png";
+                return "Images/PFPs/0.png";
             }
 
-            return "Images/PFPS/" + id + ".png";
+            return "Images/PFPs/" + id + ".png";
         }
 
         // ========================================
@@ -6756,19 +6757,29 @@
         // ====================================
 
         function hapticFeedback(pattern) {
-            // Check if vibration is supported
-            if (!('vibrate' in navigator)) {
+            if (!visualEffectsEnabled) return;
+
+            // Standard vibration API (Android, Chrome)
+            if ('vibrate' in navigator) {
+                navigator.vibrate(pattern);
                 return;
             }
-            
-            // Check if visual effects are enabled (we'll use this setting for haptics too)
-            if (!visualEffectsEnabled) {
-                return;
+
+            // iOS Safari fallback — use AudioContext to trigger a silent sound
+            // which causes the taptic engine to fire on supported devices
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                gain.gain.setValueAtTime(0.001, ctx.currentTime); // nearly silent
+                osc.frequency.setValueAtTime(1, ctx.currentTime);
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.01);
+            } catch(e) {
+                // Haptics not supported — fail silently
             }
-            
-            // Trigger vibration
-            // Pattern can be: number (single vibration) or array [vibrate, pause, vibrate, ...]
-            navigator.vibrate(pattern);
         }
 
         // Predefined haptic patterns
