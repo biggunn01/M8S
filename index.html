@@ -56,9 +56,11 @@
             left: 0;
             width: 100%;
             height: 100vh;
+            height: -webkit-fill-available;
             background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%);
             z-index: 10000;
-            overflow: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .title-screen.show {
@@ -66,6 +68,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding-bottom: max(env(safe-area-inset-bottom, 0px), 40px);
         }
 
         /* Animated background pattern */
@@ -211,6 +214,7 @@
             gap: 20px;
             max-width: 600px;
             margin: 0 auto;
+            padding-bottom: max(env(safe-area-inset-bottom, 0px), 20px);
         }
 
         .title-button {
@@ -3208,6 +3212,53 @@
             /* Boost Setup */
             .setup-title {
                 font-size: 1.4em;
+            }
+            
+            /* Boost items — stack on phone */
+            .player-boost-item {
+                grid-template-columns: 45px 1fr;
+                grid-template-rows: auto auto auto;
+                padding: 12px;
+                gap: 8px;
+            }
+
+            .player-boost-avatar {
+                width: 40px;
+                height: 40px;
+                grid-row: 1 / 4;
+            }
+
+            .player-boost-name {
+                font-size: 0.9em;
+                grid-column: 2;
+                align-self: center;
+            }
+
+            /* Stack boost columns vertically on phone */
+            .player-boost-item .boost-column:nth-child(3),
+            .player-boost-item .boost-column:nth-child(4) {
+                grid-column: 2;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 8px;
+                width: 100%;
+            }
+
+            .player-boost-item .boost-column:nth-child(3) label,
+            .player-boost-item .boost-column:nth-child(4) label {
+                min-width: 95px;
+                font-size: 0.78em;
+            }
+
+            /* Active In column */
+            .player-boost-item .boost-column:last-child {
+                grid-column: 2;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 8px;
+                width: 100%;
             }
             
             .player-boost-list {
@@ -13708,11 +13759,11 @@
                 const confirmNew = confirm(
                     `⚠️ SAVED TOURNAMENT DETECTED
                     
-                    You have a saved ${GAME_MODES[savedState.mode.id]?.name || 'tournament'} in progress.
+You have a saved ${GAME_MODES[savedState.mode.id]?.name || 'tournament'} in progress.
 
-                    Starting a new tournament will DELETE the saved game.
+Starting a new tournament will DELETE the saved game.
 
-                    Continue?`
+Continue?`
                 );
                 
                 if (!confirmNew) {
@@ -13748,8 +13799,18 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             document.body.classList.add('title-active');  // Mark title as active
-            updateResumeButton();
 
+            // Only show resume button if this is NOT a hard refresh/new tab.
+            // sessionStorage is cleared on hard refresh, localStorage persists.
+            const isReturningSession = sessionStorage.getItem('m8s_active_session');
+            if (isReturningSession) {
+                updateResumeButton();
+            } else {
+                // Fresh load or hard refresh — mark session as active but don't offer resume
+                sessionStorage.setItem('m8s_active_session', '1');
+                const resumeBtn = document.getElementById('resumeButton');
+                if (resumeBtn) resumeBtn.style.display = 'none';
+            }
 
             // Back to modes button
             const backToModesBtn = document.getElementById('backToModesButton');
@@ -14055,35 +14116,43 @@
             // ── Auth state listener ─────────────────────────────────────
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
-                    // Logged in
-                    window.currentUser = {
-                        uid: user.uid,
-                        email: user.email,
-                        displayName: user.displayName || user.email.split('@')[0],
-                        isGuest: false,
-                        isHolder: false, // Phase 6: wallet verification
-                    };
-
                     // Create or update user document in Firestore
                     const userRef = doc(db, 'users', user.uid);
                     const userSnap = await getDoc(userRef);
+
+                    let firestoreDisplayName = null;
+
                     if (!userSnap.exists()) {
+                        // New user — create doc using Google display name as starting point
+                        const defaultName = user.displayName || user.email.split('@')[0];
                         await setDoc(userRef, {
                             uid: user.uid,
                             email: user.email,
-                            displayName: window.currentUser.displayName,
+                            displayName: defaultName,
                             isHolder: false,
                             role: 'player',
                             createdAt: serverTimestamp(),
                             lastSeen: serverTimestamp(),
                         });
+                        firestoreDisplayName = defaultName;
                         console.log('New user document created ✅');
                     } else {
+                        // Returning user — use their saved Firestore display name
+                        const data = userSnap.data();
+                        firestoreDisplayName = data.displayName || user.displayName || user.email.split('@')[0];
                         await setDoc(userRef, { lastSeen: serverTimestamp() }, { merge: true });
                     }
 
+                    window.currentUser = {
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: firestoreDisplayName, // always from Firestore, not Google Auth
+                        isGuest: false,
+                        isHolder: false,
+                    };
+
                     console.log('Signed in as:', window.currentUser.displayName);
-                    window.updateAuthUI(user);
+                    window.updateAuthUI({ displayName: firestoreDisplayName, email: user.email });
                     window.closeAuthModal?.();
 
                 } else {
