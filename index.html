@@ -6397,9 +6397,10 @@
 
         // Build NFT image URL from riderId (1-1000)
         function getPlayerNFTUrl(riderId) {
-            // Use local GitHub Pages images to avoid CORS issues in Firefox/Safari
-            // Previously used Pinata IPFS gateway which has cross-origin restrictions
-            return getPlayerAvatarUrl(riderId);
+            const baseUrl = "https://harlequin-advanced-silkworm-824.mypinata.cloud/ipfs/QmRGYEj9vQK1QUaGdkJxXj2nKquAxgLFJhhah4GJWqyNgt/";
+            const id = parseInt(riderId, 10);
+            if (!id || id < 1 || id > 1000) return "Images/0.png";
+            return baseUrl + id + ".png";
         }
 
         // Avatar icons - relative path
@@ -9426,7 +9427,7 @@
             playersContainer.innerHTML = `
                 <div class="splash-player">
                     <div class="splash-nft-container" style="border-color: ${match.player1.color}">
-                        <img class="splash-nft-img" src="${getPlayerNFTUrl(match.player1.riderId)}" alt="${match.player1.name}">
+                        <img class="splash-nft-img" src="${getPlayerNFTUrl(match.player1.riderId)}" alt="${match.player1.name}" onerror="this.src='Images/0.png'">
                     </div>
                     <div class="splash-player-name" style="color: ${match.player1.color}">${match.player1.name}</div>
                     <div class="splash-gang-name" style="color: ${match.player1.color}">
@@ -9438,7 +9439,7 @@
                 <div class="splash-vs">VS</div>
                 <div class="splash-player">
                     <div class="splash-nft-container" style="border-color: ${match.player2.color}">
-                        <img class="splash-nft-img" src="${getPlayerNFTUrl(match.player2.riderId)}" alt="${match.player2.name}">
+                        <img class="splash-nft-img" src="${getPlayerNFTUrl(match.player2.riderId)}" alt="${match.player2.name}" onerror="this.src='Images/0.png'">
                     </div>
                     <div class="splash-player-name" style="color: ${match.player2.color}">${match.player2.name}</div>
                     <div class="splash-gang-name" style="color: ${match.player2.color}">
@@ -9499,7 +9500,7 @@
             playersContainer.innerHTML = `
                 <div class="splash-player" style="opacity: ${leftIsWinner ? '1' : '0.8'};">
                     <div class="splash-nft-container" style="border-color: ${leftPlayer.color}; position: relative;">
-                    <img class="splash-nft-img" src="${getPlayerNFTUrl(leftPlayer.riderId)}" alt="${leftPlayer.name}">
+                    <img class="splash-nft-img" src="${getPlayerNFTUrl(leftPlayer.riderId)}" alt="${leftPlayer.name}" onerror="this.src='Images/0.png'">
                     ${!leftIsWinner ? '<div class="splash-loser-overlay"><div class="splash-loser-x">X</div></div>' : ''}
                     </div>
                     <div class="splash-player-name" style="color: ${leftPlayer.color}">${leftPlayer.name}</div>
@@ -9512,7 +9513,7 @@
                 <div class="splash-vs">VS</div>
                 <div class="splash-player" style="opacity: ${rightIsWinner ? '1' : '0.8'};">
                     <div class="splash-nft-container" style="border-color: ${rightPlayer.color}; position: relative;">
-                    <img class="splash-nft-img" src="${getPlayerNFTUrl(rightPlayer.riderId)}" alt="${rightPlayer.name}">
+                    <img class="splash-nft-img" src="${getPlayerNFTUrl(rightPlayer.riderId)}" alt="${rightPlayer.name}" onerror="this.src='Images/0.png'">
                     ${!rightIsWinner ? '<div class="splash-loser-overlay"><div class="splash-loser-x">X</div></div>' : ''}
                     </div>
                     <div class="splash-player-name" style="color: ${rightPlayer.color}">${rightPlayer.name}</div>
@@ -12509,8 +12510,8 @@
                     exitReplay();
                 }
             } else {
-                // Enter replay mode with 'P' key
-                if (key === 'r') {
+                // Enter replay mode — only when a match is actually in progress
+                if (key === 'r' && matches.length > 0 && matches[currentMatchIndex]) {
                     enterReplayMode();
                 }
             }
@@ -13553,6 +13554,10 @@
                     stats: gameStats,
                     activeGameMode: activeGameMode
                 });
+
+                // Mark this save in sessionStorage so resume only shows in the same browser session
+                // Hard refresh clears sessionStorage, preventing stale resume prompts
+                sessionStorage.setItem('m8s_save_ts_' + tournamentState.timestamp, '1');
                 
                 console.log('✅ Tournament state saved automatically');
                 return true;
@@ -13716,33 +13721,30 @@
 
         function updateResumeButton() {
             const resumeBtn = document.getElementById('resumeButton');
-            
-            if (!resumeBtn) {
-                console.warn('Resume button not found in DOM');
-                return;
-            }
+            if (!resumeBtn) return;
 
-            // Never show resume on a hard refresh / fresh tab — only within an active session
-            const isActiveSession = sessionStorage.getItem('m8s_active_session');
-            if (!isActiveSession) {
-                resumeBtn.style.display = 'none';
-                return;
-            }
-            
             const savedState = checkForSavedTournament();
-            
+
             if (savedState) {
+                // Only show resume if the save happened in THIS browser session
+                // sessionStorage is cleared on hard refresh; localStorage persists
+                const saveKey = 'm8s_save_ts_' + savedState.timestamp;
+                const savedThisSession = sessionStorage.getItem(saveKey);
+
+                if (!savedThisSession) {
+                    resumeBtn.style.display = 'none';
+                    console.log('Resume hidden — save is from a previous session (hard refresh)');
+                    return;
+                }
+
                 resumeBtn.style.display = 'block';
                 resumeBtn.disabled = false;
-                
                 const modeRules = GAME_MODES[savedState.mode.id];
-                resumeBtn.querySelector('span').textContent = 
+                resumeBtn.querySelector('span').textContent =
                     `↻ RESUME ${modeRules ? modeRules.name.toUpperCase() : 'TOURNAMENT'}`;
-                
                 console.log('✅ Resume button shown for', modeRules?.name);
             } else {
                 resumeBtn.style.display = 'none';
-                console.log('Resume button hidden - no saved game');
             }
         }
 
@@ -13755,9 +13757,11 @@
             if (mobileHeader) mobileHeader.style.display = '';
             if (mobileSettings) mobileSettings.style.display = '';
 
+            // Only warn about saved game if it was saved in THIS browser session
             const savedState = checkForSavedTournament();
+            const saveInSession = savedState && sessionStorage.getItem('m8s_save_ts_' + savedState.timestamp);
             
-            if (savedState) {
+            if (saveInSession) {
                 const confirmNew = confirm(
                     `⚠️ SAVED TOURNAMENT DETECTED
                     
@@ -13773,6 +13777,9 @@ Continue?`
                 }
                 
                 // Clear saved tournament
+                clearSavedTournament();
+            } else if (savedState) {
+                // Stale save from previous session — silently clear it
                 clearSavedTournament();
             }
             
@@ -13800,21 +13807,9 @@ Continue?`
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            document.body.classList.add('title-active');  // Mark title as active
+            document.body.classList.add('title-active');
+            updateResumeButton();
 
-            // Only show resume button if this is NOT a hard refresh/new tab.
-            // sessionStorage is cleared on hard refresh, localStorage persists.
-            const isReturningSession = sessionStorage.getItem('m8s_active_session');
-            if (isReturningSession) {
-                updateResumeButton();
-            } else {
-                // Fresh load or hard refresh — mark session as active but don't offer resume
-                sessionStorage.setItem('m8s_active_session', '1');
-                const resumeBtn = document.getElementById('resumeButton');
-                if (resumeBtn) resumeBtn.style.display = 'none';
-            }
-
-            // Back to modes button
             const backToModesBtn = document.getElementById('backToModesButton');
             if (backToModesBtn) {
                 backToModesBtn.addEventListener('click', hideClassicModesSubmenu);
