@@ -19,8 +19,9 @@
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: #fff;
             min-height: 100vh;
-            min-height: -webkit-fill-available; /* Safari fix: prevents layout jump from dynamic toolbar */
+            min-height: -webkit-fill-available;
             padding: 20px;
+            overflow-x: hidden; /* prevent horizontal scroll on iPhone */
         }
 
         .container {
@@ -68,6 +69,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding-top: max(env(safe-area-inset-top, 0px), 20px);
             padding-bottom: max(env(safe-area-inset-bottom, 0px), 40px);
         }
 
@@ -6395,15 +6397,9 @@
 
         // Build NFT image URL from riderId (1-1000)
         function getPlayerNFTUrl(riderId) {
-            const baseUrl = "https://harlequin-advanced-silkworm-824.mypinata.cloud/ipfs/QmRGYEj9vQK1QUaGdkJxXj2nKquAxgLFJhhah4GJWqyNgt/";
-            const id = parseInt(riderId, 10);
-
-            if (!id || id < 1 || id > 1000) {
-                // Fallback: use ID 1 if invalid, so we always show *something*
-                return "Images/0.png";
-            }
-
-            return baseUrl + id + ".png";
+            // Use local GitHub Pages images to avoid CORS issues in Firefox/Safari
+            // Previously used Pinata IPFS gateway which has cross-origin restrictions
+            return getPlayerAvatarUrl(riderId);
         }
 
         // Avatar icons - relative path
@@ -13725,6 +13721,13 @@
                 console.warn('Resume button not found in DOM');
                 return;
             }
+
+            // Never show resume on a hard refresh / fresh tab — only within an active session
+            const isActiveSession = sessionStorage.getItem('m8s_active_session');
+            if (!isActiveSession) {
+                resumeBtn.style.display = 'none';
+                return;
+            }
             
             const savedState = checkForSavedTournament();
             
@@ -13732,7 +13735,6 @@
                 resumeBtn.style.display = 'block';
                 resumeBtn.disabled = false;
                 
-                // Update button text with saved game info
                 const modeRules = GAME_MODES[savedState.mode.id];
                 resumeBtn.querySelector('span').textContent = 
                     `↻ RESUME ${modeRules ? modeRules.name.toUpperCase() : 'TOURNAMENT'}`;
