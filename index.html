@@ -9440,7 +9440,7 @@
             playersContainer.innerHTML = `
                 <div class="splash-player">
                     <div class="splash-nft-container" style="border-color: ${match.player1.color}">
-                        <img class="splash-nft-img" src="${getPlayerNFTUrl(match.player1.riderId)}" alt="${match.player1.name}" onerror="this.src='Images/0.png'">
+                        <img class="splash-nft-img" src="${getPlayerNFTUrl(match.player1.riderId)}" alt="${match.player1.name}" onerror="this.onerror=null;this.src='${getPlayerAvatarUrl(match.player1.riderId)}'">
                     </div>
                     <div class="splash-player-name" style="color: ${match.player1.color}">${match.player1.name}</div>
                     <div class="splash-gang-name" style="color: ${match.player1.color}">
@@ -9452,7 +9452,7 @@
                 <div class="splash-vs">VS</div>
                 <div class="splash-player">
                     <div class="splash-nft-container" style="border-color: ${match.player2.color}">
-                        <img class="splash-nft-img" src="${getPlayerNFTUrl(match.player2.riderId)}" alt="${match.player2.name}" onerror="this.src='Images/0.png'">
+                        <img class="splash-nft-img" src="${getPlayerNFTUrl(match.player2.riderId)}" alt="${match.player2.name}" onerror="this.onerror=null;this.src='${getPlayerAvatarUrl(match.player2.riderId)}'">
                     </div>
                     <div class="splash-player-name" style="color: ${match.player2.color}">${match.player2.name}</div>
                     <div class="splash-gang-name" style="color: ${match.player2.color}">
@@ -9513,7 +9513,7 @@
             playersContainer.innerHTML = `
                 <div class="splash-player" style="opacity: ${leftIsWinner ? '1' : '0.8'};">
                     <div class="splash-nft-container" style="border-color: ${leftPlayer.color}; position: relative;">
-                    <img class="splash-nft-img" src="${getPlayerNFTUrl(leftPlayer.riderId)}" alt="${leftPlayer.name}" onerror="this.src='Images/0.png'">
+                    <img class="splash-nft-img" src="${getPlayerNFTUrl(leftPlayer.riderId)}" alt="${leftPlayer.name}" onerror="this.onerror=null;this.src='${getPlayerAvatarUrl(leftPlayer.riderId)}'">
                     ${!leftIsWinner ? '<div class="splash-loser-overlay"><div class="splash-loser-x">X</div></div>' : ''}
                     </div>
                     <div class="splash-player-name" style="color: ${leftPlayer.color}">${leftPlayer.name}</div>
@@ -9526,7 +9526,7 @@
                 <div class="splash-vs">VS</div>
                 <div class="splash-player" style="opacity: ${rightIsWinner ? '1' : '0.8'};">
                     <div class="splash-nft-container" style="border-color: ${rightPlayer.color}; position: relative;">
-                    <img class="splash-nft-img" src="${getPlayerNFTUrl(rightPlayer.riderId)}" alt="${rightPlayer.name}" onerror="this.src='Images/0.png'">
+                    <img class="splash-nft-img" src="${getPlayerNFTUrl(rightPlayer.riderId)}" alt="${rightPlayer.name}" onerror="this.onerror=null;this.src='${getPlayerAvatarUrl(rightPlayer.riderId)}'">
                     ${!rightIsWinner ? '<div class="splash-loser-overlay"><div class="splash-loser-x">X</div></div>' : ''}
                     </div>
                     <div class="splash-player-name" style="color: ${rightPlayer.color}">${rightPlayer.name}</div>
