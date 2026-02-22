@@ -6216,8 +6216,8 @@
                 },
                 interferenceEnabled: true,
                 interferenceChance: 0.5,
-                icon: 'Images/Icons/Brawler_150.png' 
-                //icon: '🥊'
+                //icon: 'Images/Icons/Brawler_150.png' 
+                icon: '🥊'
             },
 
             raceMode: {
@@ -6243,8 +6243,8 @@
                 },
                 interferenceEnabled: true,
                 interferenceChance: 0.5,
-                icon: 'Images/Icons/NosDemon_150.png' 
-                //icon: '🏁'
+                //icon: 'Images/Icons/NosDemon_150.png' 
+                icon: '🏁'
             },
 
             recoveryMode: {
@@ -6270,8 +6270,8 @@
                 },
                 interferenceEnabled: true,
                 interferenceChance: 0.5,
-                icon: 'Images/Icons/Guardian_150.png' 
-                //icon: '💫'
+                //icon: 'Images/Icons/Guardian_150.png' 
+                icon: '💫'
             },
 
             mayhemMode: {
@@ -8347,7 +8347,7 @@
                 card.className = 'mode-card';
                 card.dataset.mode = modeKey;
                 const iconHTML = mode.icon.includes('.png') 
-                    ? `<img src="${mode.icon}" alt="${mode.name}" style="width: 100px; height: 100px; object-fit: contain;">`
+                    ? `<img src="${mode.icon}" alt="${mode.name}" style="width: 60px; height: 60px; object-fit: contain;">`
                     : mode.icon; // Fallback to emoji if not a PNG
                 card.innerHTML = `
                     <div class="mode-icon">${iconHTML}</div>
