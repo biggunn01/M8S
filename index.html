@@ -3086,7 +3086,7 @@
             }
             
             .stats-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(3, 1fr);
             }
             
             .stat-value {
@@ -3224,6 +3224,10 @@
         @media (max-width: 480px) {
             body {
                 padding: env(safe-area-inset-top, 15px) env(safe-area-inset-right, 15px) env(safe-area-inset-bottom, 15px) env(safe-area-inset-left, 15px);
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
             }
             
             h1 {
