@@ -8731,9 +8731,9 @@
                 const disabledAttr = boostsDisabled ? 'disabled' : '';
                 const p1IconUrl = getBoostIconUrl(player.primaryBoost);
                 if (p1IconUrl) {
-                    html += `<img class="boost-select-icon" id="primaryIcon_${player.id}" src="${p1IconUrl}" alt="" style="width:32px;height:32px;object-fit:contain;display:block;margin:0 auto 4px;">`;
+                    html += `<img class="boost-select-icon" id="primaryIcon_${player.id}" src="${p1IconUrl}" alt="" style="width:48px;height:48px;object-fit:contain;display:block;margin:4px auto 6px;">`;
                 } else {
-                    html += `<img class="boost-select-icon" id="primaryIcon_${player.id}" src="" alt="" style="width:32px;height:32px;display:none;margin:0 auto 4px;">`;
+                    html += `<img class="boost-select-icon" id="primaryIcon_${player.id}" src="" alt="" style="width:48px;height:48px;display:none;margin:4px auto 6px;">`;
                 }
                 html += `<select class="boost-select primary-boost" data-player-id="${player.id}" ${disabledAttr}>`;
                 
@@ -8755,9 +8755,9 @@
                 html += `<div class="boost-label">Secondary Boost</div>`;
                 const s1IconUrl = getBoostIconUrl(player.secondaryBoost);
                 if (s1IconUrl) {
-                    html += `<img class="boost-select-icon" id="secondaryIcon_${player.id}" src="${s1IconUrl}" alt="" style="width:32px;height:32px;object-fit:contain;display:block;margin:0 auto 4px;">`;
+                    html += `<img class="boost-select-icon" id="secondaryIcon_${player.id}" src="${s1IconUrl}" alt="" style="width:48px;height:48px;object-fit:contain;display:block;margin:4px auto 6px;">`;
                 } else {
-                    html += `<img class="boost-select-icon" id="secondaryIcon_${player.id}" src="" alt="" style="width:32px;height:32px;display:none;margin:0 auto 4px;">`;
+                    html += `<img class="boost-select-icon" id="secondaryIcon_${player.id}" src="" alt="" style="width:48px;height:48px;display:none;margin:4px auto 6px;">`;
                 }
                 html += `<select class="boost-select secondary secondary-boost" data-player-id="${player.id}" ${disabledAttr}>`;
 
