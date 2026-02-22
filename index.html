@@ -59,7 +59,7 @@
             height: 100%;
             background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%);
             z-index: 10000;
-            overflow-y: auto;
+            overflow-y: scroll; /* always show scrollbar to prevent layout shift */
             -webkit-overflow-scrolling: touch;
         }
 
@@ -67,12 +67,15 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             padding: max(env(safe-area-inset-top, 20px), 20px)
                      20px
                      max(env(safe-area-inset-bottom, 40px), 40px)
                      20px;
         }
+
+        /* Center content vertically only when it fits, otherwise scroll from top */
+        /* Center content vertically only when it fits, otherwise scroll from top */
 
         /* Animated background pattern */
         .title-screen::before {
@@ -110,6 +113,9 @@
             text-align: center;
             z-index: 1;
             animation: titleFadeIn 1s ease-out;
+            width: 100%;
+            max-width: 700px;
+            margin: auto 0;
         }
 
         @keyframes titleFadeIn {
