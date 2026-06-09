@@ -1,0 +1,293 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    function isSelf(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function noPrivilegeFieldsChanged() {
+      return !request.resource.data.diff(resource.data).affectedKeys()
+        .hasAny(['role', 'isHolder', 'walletAddress', 'ownedRiders', 'ownedMCV',
+                 'walletVerifiedAt', 'vaultAddress', 'bagTier', 'pouchTier']);
+    }
+
+    function scrapChangeOk() {
+      let oldScrap = resource.data.get('scrap', 0);
+      let newScrap = request.resource.data.get('scrap', 0);
+      return (newScrap - oldScrap) <= 9500;
+    }
+
+    function bitsChangeOk() {
+      let oldBits = resource.data.get('bits', 0);
+      let newBits = request.resource.data.get('bits', 0);
+      return (newBits - oldBits) <= 10000;
+    }
+
+    function boostInventoryOk() {
+      return !request.resource.data.keys().hasAny(['_boostInventory'])
+        || request.resource.data.get('_boostInventory', []).size() <= 50;
+    }
+
+    function savedPacksOk() {
+      return !request.resource.data.keys().hasAny(['savedPacks'])
+        || request.resource.data.get('savedPacks', []).size() <= 30;
+    }
+
+    function displayNameOk() {
+      return !request.resource.data.keys().hasAny(['displayName'])
+        || (
+          request.resource.data.displayName is string
+          && request.resource.data.displayName.size() >= 2
+          && request.resource.data.displayName.size() <= 24
+          && request.resource.data.displayName.matches('[a-zA-Z0-9 _]+')
+        );
+    }
+
+    function isRiderHolder(riderId) {
+      return request.auth != null
+        && riderId in get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('ownedRiders', []);
+    }
+
+    match /users/{userId} {
+      allow read: if true;
+      allow create: if isSelf(userId);
+      allow update: if isSelf(userId)
+        && request.resource.data.diff(resource.data).affectedKeys()
+           .hasOnly(['walletAddress', 'ownedRiders', 'ownedMCV', 'vaultAddress',
+                     'isHolder', 'walletVerifiedAt', 'role', 'mainRiderId',
+                     'mainGang', 'mainCollectionId', 'lastSeen',
+                     'lwWeeklyPaidWeek', 'lwMonthlyPaidMonth',
+                     'lwLotteryPaidWeek', 'lwQuarterlyPaidQuarter']);
+      allow update: if isSelf(userId)
+        && noPrivilegeFieldsChanged()
+        && scrapChangeOk()
+        && bitsChangeOk()
+        && boostInventoryOk()
+        && savedPacksOk()
+        && displayNameOk();
+      allow write: if isAdmin();
+      allow update: if isAuthenticated()
+        && request.auth.uid != userId
+        && request.resource.data.diff(resource.data).affectedKeys()
+           .hasOnly(['_dripNotices']);
+
+      match /scrapLog/{entry} {
+        allow read, write: if isSelf(userId) || isAdmin();
+      }
+      match /bitsLog/{entry} {
+        allow read, write: if isSelf(userId) || isAdmin();
+      }
+      match /notifications/{notifId} {
+        allow read, write: if isSelf(userId);
+        allow read, write: if isAdmin();
+        allow create: if isAuthenticated();
+      }
+      match /inbox/{notifId} {
+        allow read, write: if isSelf(userId);
+        allow read, write: if isAdmin();
+      }
+      match /lwRolls/{rollId} {
+        allow read, write: if isSelf(userId);
+      }
+    }
+
+    match /rooms/{roomCode} {
+      allow read: if true;
+      allow create: if isAuthenticated();
+      allow update, delete: if isAuthenticated();
+
+      match /roster/{userId} {
+        allow read: if true;
+        allow write, delete: if isAuthenticated() || userId.matches('guest_.*');
+      }
+      match /viewers/{userId} {
+        allow read: if true;
+        allow write: if isAuthenticated() || userId.matches('guest_.*');
+      }
+      match /meta/{docId} {
+        allow read: if true;
+        allow write: if isAuthenticated();
+        allow write: if docId == 'chaosQueue';
+      }
+    }
+
+    match /live_wire_rooms/{roomId} {
+      allow read: if true;
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /lw_lottery/{weekId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /lw_lottery_broadcast/{docId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+    
+    match /lw_stats/{weekId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+
+    match /config/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /meta/houseAccount {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /meta/riderNames {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+      allow update: if isAuthenticated();
+    }
+
+    match /packPurchases/{txHash} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /winStreakRuns/{runId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.keys().size() < 20;
+      allow delete: if isAdmin();
+      allow update: if false;
+    }
+
+    match /ladderRuns/{runId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.keys().size() < 20;
+      allow delete: if isAdmin();
+      allow update: if false;
+    }
+
+    match /kothRuns/{runId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.keys().size() < 20;
+      allow delete: if isAdmin();
+      allow update: if false;
+    }
+
+    match /collections/{colId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /stats/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+      allow update: if isAuthenticated() && document == 'global';
+      allow create: if isAuthenticated() && document == 'global';
+    }
+
+    match /lw_scores/{scoreId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    match /playerProfiles/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+      allow update: if isAuthenticated()
+        && document == 'default'
+        && request.resource.data.keys().hasOnly(['profiles', 'updatedAt']);
+    }
+
+    match /tournaments/{document} {
+      allow read: if true;
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin();
+    }
+
+    match /matchEvents/{document} {
+      allow read: if isAdmin();
+      allow write: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /testerFeedback/{docId} {
+      allow read: if true;
+      allow create: if true
+        && request.resource.data.keys().hasAll(['type', 'discord', 'createdAt'])
+        && request.resource.data.discord is string
+        && request.resource.data.discord.size() >= 2
+        && request.resource.data.discord.size() <= 40
+        && request.resource.data.type in ['feedback', 'bug'];
+      allow update: if true
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']);
+      allow delete: if isAdmin();
+    }
+
+    match /riders/{riderId} {
+      allow read: if true;
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /pvp_challenges/{targetUid} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAuthenticated();
+    }
+
+    match /pvp_queue/{uid} {
+      allow read:   if isAuthenticated();
+      allow create: if isAuthenticated() && request.auth.uid == uid;
+      allow delete: if isAuthenticated() && request.auth.uid == uid;
+      allow update: if isAuthenticated()
+        && (request.auth.uid == uid
+         || request.resource.data.diff(resource.data).affectedKeys().hasOnly(['matchId']));
+    }
+
+    match /pvp_matches/{matchId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated()
+        && request.resource.data.player1.uid == request.auth.uid;
+      allow update: if isAuthenticated()
+        && (resource.data.player1.uid == request.auth.uid
+         || resource.data.player2.uid == request.auth.uid);
+      allow delete: if isAdmin();
+
+      match /meta/{docId} {
+        allow read: if isAuthenticated();
+        allow write: if isAuthenticated();
+        allow delete: if isAdmin();
+      }
+    }
+
+    match /adminMessages/{msgId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /sessions/{doc} {
+      allow write: if request.auth != null;
+      allow read: if request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+  }
+}
