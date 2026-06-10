@@ -18,7 +18,7 @@ Audit notes:
 ## collections
 Appears to store collection/NFT/project metadata used by the game.
 Known fields:
-- Unknown from current screenshot.
+- active (boolean)
 
 Audit notes:
 - Check whether this data is public read-only or admin-managed.
@@ -249,3 +249,6 @@ Known fields:
 
 Audit notes:
 - Check whether streaks can be faked, replayed, or edited from the browser.
+
+If the Firestore schema file has missing/unknown fields, infer any used collections and field names from `index.html` and `firestore.rules`. Flag any collection where the code/rules reference fields that are not documented.
+
